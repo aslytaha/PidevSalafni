@@ -28,5 +28,67 @@ public class DetailsLoans  implements Serializable  {
     @OneToMany(mappedBy = "detailsloan")
     private Set<LoanProject> Loanprojects;
 
+    public Integer getIdDetails() {
+        return idDetails;
+    }
 
+    public void setIdDetails(Integer idDetails) {
+        this.idDetails = idDetails;
+    }
+
+    public Number getAmountborrowed() {
+        return amountborrowed;
+    }
+
+    public void setAmountborrowed(Number amountborrowed) {
+        this.amountborrowed = amountborrowed;
+    }
+
+    public Date getLoanDate() {
+        return LoanDate;
+    }
+
+    public void setLoanDate(Date loanDate) {
+        LoanDate = loanDate;
+    }
+
+    public Date getRefundDate() {
+        return RefundDate;
+    }
+
+    public void setRefundDate(Date refundDate) {
+        RefundDate = refundDate;
+    }
+
+    public Number getRefundAmount() {
+        return RefundAmount;
+    }
+
+    public void setRefundAmount(Number refundAmount) {
+        RefundAmount = refundAmount;
+    }
+
+    public String getBorrowedName() {
+        return BorrowedName;
+    }
+
+    public void setBorrowedName(String borrowedName) {
+        BorrowedName = borrowedName;
+    }
+
+    public status getStatus() {
+        return Status;
+    }
+
+    public void setStatus(status status) {
+        Status = status;
+    }
+
+    public Set<LoanProject> getLoanprojects() {
+        return Loanprojects;
+    }
+
+    public void setLoanprojects(Set<LoanProject> loanprojects) {
+        Loanprojects = loanprojects;
+    }
 }
