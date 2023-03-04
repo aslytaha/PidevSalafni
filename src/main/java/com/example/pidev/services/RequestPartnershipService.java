@@ -2,10 +2,13 @@ package com.example.pidev.services;
 
 import com.example.pidev.Entities.RequestPartnership;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-
+@Service
+@AllArgsConstructor
 public class RequestPartnershipService implements IRequestPartnership{
     RequestPartnershipRepository requestPartnershipRepository;
 

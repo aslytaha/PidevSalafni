@@ -2,8 +2,12 @@ package com.example.pidev.services;
 
 
 import com.example.pidev.Entities.PartnershipProject;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+@Service
 
 public interface IPartnershipProject {
 
