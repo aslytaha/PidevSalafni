@@ -3,15 +3,15 @@ package Services;
 
 import com.example.pidev.Entities.DetailsLoans;
 import com.example.pidev.Repositories.DetailsLoansRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public abstract class DetailsLoansServiceImpl implements Iloan{
+@AllArgsConstructor
+public  class DetailsLoansServiceImpl implements Idetails{
 
-    @Autowired
     private DetailsLoansRepository detailsLoansRepository;
 
 
@@ -29,14 +29,14 @@ public abstract class DetailsLoansServiceImpl implements Iloan{
         return detailsLoansRepository.save(detailsLoans);
     }
 
-    @Override
-    public void deleteDetailsLoansById(Integer id) {
-        detailsLoansRepository.deleteById(id);
-    }
-    @Override
-    public DetailsLoans updateDetails(DetailsLoans d) {
-        return detailsLoansRepository.save(d);
-    }
+//    @Override
+//    public void deleteDetailsLoansById(Integer id) {
+//        detailsLoansRepository.deleteById(id);
+//    }
+//    @Override
+//    public DetailsLoans updateDetails(DetailsLoans d) {
+//        return detailsLoansRepository.save(d);
+//    }
 
 
 

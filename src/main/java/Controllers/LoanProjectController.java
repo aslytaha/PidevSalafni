@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loan-projects")
+@RequestMapping("/api")
 public class LoanProjectController {
 
      @Autowired
@@ -24,8 +24,9 @@ public class LoanProjectController {
 //        return loanProjectService.getLoanProjectById(id);
 //    }
 //
-    @PostMapping("/")
-    public LoanProject saveLoanProject(@RequestBody LoanProject loanProject) {
-        return loanProjectService.saveLoanProject(loanProject);
-    }
+//    @PostMapping("/")
+//    public LoanProject saveLoanProject(@RequestBody LoanProject loanProject) {
+//        return loanProjectService.saveLoanProject(loanProject);
+//    }
 }
+
