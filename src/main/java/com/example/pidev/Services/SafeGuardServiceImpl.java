@@ -1,4 +1,4 @@
-package Services;
+package com.example.pidev.Services;
 
 
 import com.example.pidev.Entities.SafeGuard;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public abstract class SafeGuardServiceImpl implements Isafeguard {
+public  class SafeGuardServiceImpl implements Isafeguard {
 
     @Autowired
     private SafeGuardRepository safeGuardRepository;
