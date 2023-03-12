@@ -1,6 +1,5 @@
 package com.example.pidev.services;
 
-import com.example.pidev.Entities.Admin;
 import com.example.pidev.Entities.BankAccount;
 
 import java.util.List;

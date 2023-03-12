@@ -10,6 +10,6 @@ public interface IAssuranceService {
     public Assurance addAssurance(Assurance as);
     public Assurance updateAssurance(Assurance as);
     public List<Assurance> getAllAssurance();
-    public Optional<Assurance> getAssuranceById(Long asId);
-    public void deleteAssurance(Long asId);
+    public Assurance getAssuranceById(Integer asID);
+    public void deleteAssurance(Integer asID);
 }

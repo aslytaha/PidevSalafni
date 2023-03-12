@@ -28,12 +28,12 @@ public class AssuranceService implements IAssuranceService{
     }
 
     @Override
-    public Optional<Assurance> getAssuranceById(Long asId) {
-        return Optional.ofNullable(assuranceRepository.findById(asId).orElse(null));
+    public Assurance getAssuranceById(Integer asID) {
+        return assuranceRepository.findById(asID).orElse(null);
     }
 
     @Override
-    public void deleteAssurance(Long asId) {
-        assuranceRepository.deleteById(asId);
+    public void deleteAssurance(Integer asID) {
+        assuranceRepository.deleteById(asID);
     }
 }
