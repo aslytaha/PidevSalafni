@@ -4,10 +4,7 @@ import java.util.List;
 
 
 public interface ITransaction {
+    void depot(Integer IDClient, float Amount)throws Exception;
+    void retrait(Integer IDClient, float Amount)throws Exception;
 
-    Transaction addTransaction(Transaction t);
-    Transaction updateTransaction(Transaction t);
-    void delete(Integer IDtransaction);
-    List<Transaction> getAllTransaction();
-    Transaction getTransactionById(Integer IDtransaction);
 }

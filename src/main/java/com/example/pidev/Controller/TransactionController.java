@@ -1,10 +1,13 @@
 package com.example.pidev.Controller;
 import com.example.pidev.Entities.Transaction;
+import com.example.pidev.Repository.ClientAccountRepository;
 import com.example.pidev.Service.Classes.TransactionService;
 import com.example.pidev.Service.Interface.ITransaction;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -14,41 +17,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
-
     @Autowired
     TransactionService transactionService;
 
-    @PostMapping("/add")
-    public Transaction addTransaction(@RequestBody Transaction t) {
-        return transactionService.addTransaction(t);
+    ClientAccountRepository clientAccountRepository;
+
+    @PostMapping("/depot")
+    public ResponseEntity<?> depot(@RequestParam Integer IDClient, @RequestParam Float Amount) {
+        try {
+            transactionService.depot(IDClient, Amount);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
-
-    @PutMapping("/update")
-    public Transaction updateTransaction(@RequestBody Transaction t) {
-        return transactionService.updateTransaction(t);
+    @PostMapping("/retrait")
+    public ResponseEntity<?> retrait(@RequestParam Integer IDClient, @RequestParam Float Amount) {
+        try {
+            transactionService.retrait(IDClient, Amount );
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+}
 
 
-    @DeleteMapping("/delete/{IDtransaction}")
 
-        public void deleteTransaction(@PathVariable("IDtransaction") Integer IDtransaction)
-        {
-            transactionService.delete(IDtransaction);
-        }
-
-
-        @GetMapping("/getAll")
-    public List<Transaction> getAllTransaction(){
-        return transactionService.getAllTransaction();
-        }
-
-
-        @GetMapping("/getByID/{IDtransaction}")
-public Transaction getByTransaction(@PathVariable("IDtransaction") Integer IDtransaction)
-        {
-            return transactionService.getTransactionById(IDtransaction);
-        }
-
-    }
 

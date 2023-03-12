@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @RestController
+@RequestMapping("/clientaccounts")
 
 public class ClientAccountController {
     @Autowired

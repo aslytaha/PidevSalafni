@@ -1,60 +1,39 @@
 package com.example.pidev.Entities;
+import lombok.*;
+
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
 @Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Transaction")
 public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer IDtransaction; // clé primaire
+    private Float Amount;
+    private LocalDateTime date;
+    private String Transaction_type;
 
-    @Column(name="IDtransaction")
-    private Integer IDtransaction ; // clé primaire
-    @Column(nullable = false,name = "Amount")
-    private Float Amount ;
-    @Column(nullable = false,name = "date")
-    private Date date ;
-    @Column(nullable = false,name = "Transaction_type")
-    private String Transaction_type ;
 
-     @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IDClient", nullable = false)
     private ClientAccount clientaccount;
+
     @ManyToOne
     private BankAccount Bank_account;
 
-    public Integer getIDtransaction() {
-        return IDtransaction;
-    }
-
-    public void setIDtransaction(Integer IDtransaction) {
-        this.IDtransaction = IDtransaction;
-    }
-
-    public Float getAmount() {
-        return Amount;
-    }
-
-    public void setAmount(Float amount) {
-        Amount = amount;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getTransaction_type() {
-        return Transaction_type;
-    }
-
-    public void setTransaction_type(String transaction_type) {
-        Transaction_type = transaction_type;
-    }
-
 }
+
+
 
 

@@ -1,22 +1,26 @@
 package com.example.pidev.Entities;
 
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="Client_Account")
 public class ClientAccount {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column(name="IDClient")
+
     private Integer IDClient ; // clé primaire
-    @Column(nullable = false,name = "Solde")
-    private Integer Solde ;
-    @Column(nullable = false,name = "Subscription")
+    private float Solde ;
     private Boolean Subscription ;
-    @Column(nullable = false,name = "ExpirationDate")
     private String ExpirationDate ;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
@@ -28,34 +32,19 @@ public class ClientAccount {
     @OneToOne(mappedBy="clientaccount")
     private User user;
 
-    public Integer getIDClient() {return IDClient;}
-
-    public void setIDClient(Integer IDClient) {
-        this.IDClient = IDClient;
+    @Override
+    public String toString() {
+        return "ClientAccount{" +
+                "IDClient=" + IDClient +
+                ", Solde=" + Solde +
+                ", Subscription=" + Subscription +
+                ", ExpirationDate='" + ExpirationDate + '\'' +
+                ", transactions=" + transactions +
+                ", loanproject=" + loanproject +
+                ", partnershipproject=" + partnershipproject +
+                ", user=" + user +
+                '}';
     }
-
-    public Integer getSolde() {
-        return Solde;
-    }
-
-    public void setSolde(Integer solde) {
-        Solde = solde;
-    }
-
-    public Boolean getSubscription() {
-        return Subscription;
-    }
-
-    public void setSubscription(Boolean subscription) {
-        Subscription = subscription;
-    }
-
-    public String getExpirationDate() {
-        return ExpirationDate;
-    }
-
-    public void setExpirationDate(String expirationDate) {
-        ExpirationDate = expirationDate;
-    }
-
 }
+
+
