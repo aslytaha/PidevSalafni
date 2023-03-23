@@ -32,7 +32,7 @@ public class RequestPartnership implements Serializable {
 
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     PartnershipProject partnershipProjects;
 }
 

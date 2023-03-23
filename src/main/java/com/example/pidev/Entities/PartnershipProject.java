@@ -36,7 +36,7 @@ public class PartnershipProject implements Serializable {
 
 
 
-    @OneToMany( mappedBy="partnershipProjects")
+    @OneToMany( mappedBy="partnershipProjects",cascade = CascadeType.ALL)
     private Set<RequestPartnership> requestPartnerships ;
 
     @ManyToOne
