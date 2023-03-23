@@ -2,7 +2,6 @@ package com.example.pidev.services;
 
 
 import com.example.pidev.Entities.PartnershipProject;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,5 +19,15 @@ public interface IPartnershipProject {
     PartnershipProject retrievePartnershipProject (Long idPartnership);
 
     void deletePartnershipProject( Long idPartnership);
+
+   // PartnershipProject findBestProject(double investmentAmount);
+
+    List<PartnershipProject> findBestProjects(double investmentAmount);
+
+    //List<PartnershipProject> findBestProjects(double investmentAmount);
+
+    // PartnershipProject findBestProject(double investmentAmount);
+
+    List<PartnershipProject> getAllProjectsWithRequests();
 
 }

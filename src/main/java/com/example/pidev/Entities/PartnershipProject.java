@@ -24,6 +24,7 @@ public class PartnershipProject implements Serializable {
     private Long idPartnership; // Clé primaire
     private Long shareofProject;
     private Long amountRequested;
+    private Long amountTotal;
     private String projectStage;
     private Date startDate;
     private Date finishDate;
@@ -40,6 +41,9 @@ public class PartnershipProject implements Serializable {
 
     @ManyToOne
     ClientAccount clientaccount;
+
+
+
 
 }
 

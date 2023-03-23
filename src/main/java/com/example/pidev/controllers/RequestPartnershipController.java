@@ -5,6 +5,7 @@ import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
 import com.example.pidev.services.IRequestPartnership;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,4 +49,12 @@ public class RequestPartnershipController {
         RequestPartnership request= requestPartnership.updateRequestPartnership(r);
         return request;
     }
+
+
+    @PostMapping("/projects/{projectId}/requests")
+    public ResponseEntity<String> addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
+        requestPartnership.addRequestAndAssignToProject(request, projectId);
+        return ResponseEntity.ok("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
+    }
+
 }

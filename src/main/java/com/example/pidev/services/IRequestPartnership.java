@@ -17,4 +17,7 @@ public interface IRequestPartnership {
     RequestPartnership retrieveRequestPartnership (Long idRequest);
 
     void deleteRequestPartnership( Long idRequest);
+
+     void addRequestAndAssignToProject(RequestPartnership request, Long projectId);
+
 }

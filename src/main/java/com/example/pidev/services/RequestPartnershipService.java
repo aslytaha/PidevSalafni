@@ -1,6 +1,8 @@
 package com.example.pidev.services;
 
+import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RequestPartnershipService implements IRequestPartnership{
     RequestPartnershipRepository requestPartnershipRepository;
+    PartnershipProjectRepository partnershipProjectRepository;
 
     @Override
     public List<RequestPartnership> retrieveAllRequestPartnership() {
@@ -36,5 +39,24 @@ public class RequestPartnershipService implements IRequestPartnership{
     public void deleteRequestPartnership(Long idRequest) {
         requestPartnershipRepository.deleteById(idRequest);
 
+    }
+
+
+    public void addRequestAndAssignToProject(RequestPartnership request, Long projectId) {
+        // récupérer le projet à partir de l'ID
+        PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
+
+        if (project != null) {
+            // assigner le projet à la demande de partenariat
+            request.setPartnershipProjects(project);
+            // ajouter la demande de partenariat au projet
+            project.getRequestPartnerships().add(request);
+            // enregistrer les changements dans la base de données
+            partnershipProjectRepository.save(project);
+            requestPartnershipRepository.save(request);
+            System.out.println("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
+        } else {
+            System.out.println("Impossible d'assigner la demande de partenariat au projet. Vérifiez l'ID du projet fourni.");
+        }
     }
 }

@@ -2,10 +2,15 @@ package com.example.pidev.controllers;
 
 
 import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.services.IPartnershipProject;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -13,6 +18,7 @@ import java.util.List;
 @RequestMapping("/partnership")
 public class PartnershipProjectController {
     IPartnershipProject partnershipProject;
+    PartnershipProjectRepository partnershipProjectRepository;
 
     // http://localhost:8089/salafni/partnership/retrieve-all-partnership
     @GetMapping("/retrieve-all-partnership")
@@ -43,8 +49,40 @@ public class PartnershipProjectController {
     // http://localhost:8089/salafni/partnership/update-partnership
     @PutMapping("/update-partnership")
     public PartnershipProject updatePartnership(@RequestBody PartnershipProject p) {
-        PartnershipProject partnership= partnershipProject.updatePartnershipProject(p);
+        PartnershipProject partnership = partnershipProject.updatePartnershipProject(p);
         return partnership;
+    }
+
+/*
+    @GetMapping("/best/{amount}")
+    public PartnershipProject getbest(@PathVariable("amount") double amount) {
+        PartnershipProject best = partnershipProject.findBestProject(amount);
+        return best;
+
+
+    }
+
+ */
+
+  /*  @GetMapping("/best-project")
+    public ResponseEntity<List<PartnershipProject>> getBestProject(@RequestParam double investmentAmount) {
+        List<PartnershipProject> projects = partnershipProject.findBestProjects(investmentAmount);
+        return ResponseEntity.ok(projects);
+    }
+*/
+
+    @GetMapping("/projects/best")
+    public ResponseEntity<List<PartnershipProject>> findBestProjects(@RequestParam double investmentAmount) {
+        List<PartnershipProject> projects = partnershipProjectRepository.findAll();
+        List<PartnershipProject> bestProjects = partnershipProject.findBestProjects(investmentAmount);
+        return ResponseEntity.ok().body(bestProjects);
+    }
+
+
+    @GetMapping("allProjectWithRequests")
+    public ResponseEntity<List<PartnershipProject>> getAllProjectsWithRequests() {
+        List<PartnershipProject> projects = partnershipProject.getAllProjectsWithRequests();
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
 }
