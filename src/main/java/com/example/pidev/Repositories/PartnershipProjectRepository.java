@@ -12,4 +12,8 @@ public interface PartnershipProjectRepository extends JpaRepository<PartnershipP
     @Query("SELECT p FROM PartnershipProject p LEFT JOIN FETCH p.requestPartnerships")
     List<PartnershipProject> findAllWithRequests();
 
+    List<PartnershipProject> findAllByOrderByShareofProjectDesc();
+
+    List<PartnershipProject> findByActivityArea(String activityArea);
+
 }

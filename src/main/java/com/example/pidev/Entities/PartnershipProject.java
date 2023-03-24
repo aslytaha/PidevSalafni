@@ -1,5 +1,6 @@
 package com.example.pidev.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class PartnershipProject implements Serializable {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name="idPartnership")
     private Long idPartnership; // Clé primaire
-    private Long shareofProject;
+    private float shareofProject;
     private Long amountRequested;
     private Long amountTotal;
     private String projectStage;
@@ -32,11 +33,12 @@ public class PartnershipProject implements Serializable {
     private String descriptionProject;
     private String activityArea;
     @Enumerated(EnumType.STRING)
-    private Act act;
+    private Act act=Act.owner;
 
 
 
     @OneToMany( mappedBy="partnershipProjects",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<RequestPartnership> requestPartnerships ;
 
     @ManyToOne

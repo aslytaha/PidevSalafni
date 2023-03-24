@@ -1,5 +1,6 @@
 package com.example.pidev.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +26,16 @@ public class RequestPartnership implements Serializable {
     private Long idRequest; // Clé primaire
     private String partnerName;
     private Long amountPayed;
+    private float winPercentage;
     private String description;
     private String request;
     @Enumerated(EnumType.STRING)
-    private Act act;
+    private Act act=Act.partner;
 
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JsonBackReference
     PartnershipProject partnershipProjects;
 }
 

@@ -27,6 +27,19 @@ public class PartnershipProjectController {
         return listPartnerships;
     }
 
+    @GetMapping("/getProjectsSortedByShareOfProject")
+    public List<PartnershipProject> getPartnershipsTrier(){
+        List<PartnershipProject> lists= partnershipProject.getProjectsSortedByShareOfProject();
+        return lists;
+    }
+
+
+    @GetMapping("/projects/search")
+    public ResponseEntity<List<PartnershipProject>> searchProjectsByActivityArea(@RequestParam("activityArea") String activityArea) {
+        List<PartnershipProject> projects = partnershipProject.getProjectsByActivityArea(activityArea);
+        return ResponseEntity.ok(projects);
+    }
+
     // http://localhost:8089/salafni/partnership/retrieve-partnership/{partnership-id}
     @GetMapping("/retrieve-partnership/{partnership-id}")
     public PartnershipProject retrievePartnership(@PathVariable("partnership-id") Long partnershipId) {
@@ -53,36 +66,16 @@ public class PartnershipProjectController {
         return partnership;
     }
 
-/*
-    @GetMapping("/best/{amount}")
-    public PartnershipProject getbest(@PathVariable("amount") double amount) {
-        PartnershipProject best = partnershipProject.findBestProject(amount);
-        return best;
 
-
-    }
-
- */
-
-  /*  @GetMapping("/best-project")
-    public ResponseEntity<List<PartnershipProject>> getBestProject(@RequestParam double investmentAmount) {
-        List<PartnershipProject> projects = partnershipProject.findBestProjects(investmentAmount);
-        return ResponseEntity.ok(projects);
-    }
-*/
 
     @GetMapping("/projects/best")
     public ResponseEntity<List<PartnershipProject>> findBestProjects(@RequestParam double investmentAmount) {
-        List<PartnershipProject> projects = partnershipProjectRepository.findAll();
+       // List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         List<PartnershipProject> bestProjects = partnershipProject.findBestProjects(investmentAmount);
         return ResponseEntity.ok().body(bestProjects);
     }
 
 
-    @GetMapping("allProjectWithRequests")
-    public ResponseEntity<List<PartnershipProject>> getAllProjectsWithRequests() {
-        List<PartnershipProject> projects = partnershipProject.getAllProjectsWithRequests();
-        return new ResponseEntity<>(projects, HttpStatus.OK);
-    }
+
 
 }

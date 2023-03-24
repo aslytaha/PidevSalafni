@@ -20,14 +20,13 @@ public interface IPartnershipProject {
 
     void deletePartnershipProject( Long idPartnership);
 
-   // PartnershipProject findBestProject(double investmentAmount);
+     List<PartnershipProject> getProjectsSortedByShareOfProject();
+    List<PartnershipProject> getProjectsByActivityArea(String activityArea);
 
     List<PartnershipProject> findBestProjects(double investmentAmount);
 
-    //List<PartnershipProject> findBestProjects(double investmentAmount);
 
-    // PartnershipProject findBestProject(double investmentAmount);
 
-    List<PartnershipProject> getAllProjectsWithRequests();
+
 
 }

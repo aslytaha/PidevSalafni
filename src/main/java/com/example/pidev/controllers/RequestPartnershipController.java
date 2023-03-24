@@ -54,7 +54,7 @@ public class RequestPartnershipController {
     @PostMapping("/projects/{projectId}/requests")
     public ResponseEntity<String> addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
         requestPartnership.addRequestAndAssignToProject(request, projectId);
-        return ResponseEntity.ok("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
+        return ResponseEntity.ok(".");
     }
 
 }

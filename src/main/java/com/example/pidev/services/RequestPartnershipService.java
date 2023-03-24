@@ -46,11 +46,19 @@ public class RequestPartnershipService implements IRequestPartnership{
         // récupérer le projet à partir de l'ID
         PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
 
-        if (project != null) {
+        if (project != null && project.getAmountRequested() != 0 && request.getAmountPayed() <= project.getAmountRequested()) {
+
+
             // assigner le projet à la demande de partenariat
             request.setPartnershipProjects(project);
             // ajouter la demande de partenariat au projet
             project.getRequestPartnerships().add(request);
+            //Màj de amountRequested
+            Long amountRequested = project.getAmountRequested() - request.getAmountPayed();
+            project.setAmountRequested(amountRequested);
+
+            float winPercentage = ((float) request.getAmountPayed() / (float) project.getAmountTotal()) * 100;
+            request.setWinPercentage(winPercentage);
             // enregistrer les changements dans la base de données
             partnershipProjectRepository.save(project);
             requestPartnershipRepository.save(request);
