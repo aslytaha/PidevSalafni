@@ -20,5 +20,6 @@ public interface IRequestPartnership {
 
      void addRequestAndAssignToProject(RequestPartnership request, Long projectId);
     List<RequestPartnership> sortPartnershipRequestsByAmountPayed(Long projectId);
+    void removeRequestAndAdjustAmount(Long requestId, Long projectId);
 
 }

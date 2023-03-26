@@ -27,6 +27,8 @@ public interface IPartnershipProject {
 
     public void validerProject(Long projectId);
 
+    public PartnershipProject BestProject();
+
 
 
 

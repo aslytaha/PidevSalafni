@@ -3,8 +3,10 @@ package com.example.pidev.controllers;
 
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.services.IPartnershipProject;
 import com.example.pidev.services.IRequestPartnership;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class RequestPartnershipController {
 
     IRequestPartnership requestPartnership;
+    IPartnershipProject partnershipProject;
 
     // http://localhost:8089/salafni/request/retrieve-all-request
     @GetMapping("/retrieve-all-request")
@@ -62,6 +65,17 @@ public class RequestPartnershipController {
     public ResponseEntity<List<RequestPartnership>> getSortedPartnershipRequests(@PathVariable Long projectId) {
         List<RequestPartnership> sortedRequests = requestPartnership.sortPartnershipRequestsByAmountPayed(projectId);
         return ResponseEntity.ok(sortedRequests);
+    }
+
+
+    @DeleteMapping("/partnershipproject/{projectId}/requests/{requestId}")
+    public ResponseEntity<String> removeRequestAndAdjustAmount(@PathVariable Long projectId, @PathVariable Long requestId) {
+        try {
+            requestPartnership.removeRequestAndAdjustAmount(requestId, projectId);
+            return ResponseEntity.ok("La demande de partenariat a été supprimée avec succès.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue lors de la suppression de la demande de partenariat.");
+        }
     }
 
 

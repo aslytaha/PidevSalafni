@@ -2,6 +2,7 @@ package com.example.pidev.services;
 
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.Entities.Statu;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class RequestPartnershipService implements IRequestPartnership{
         // récupérer le projet à partir de l'ID
         PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
 
-        if (project != null && project.getAmountRequested() != 0 && request.getAmountPayed() <= project.getAmountRequested()) {
+        if (project != null && project.getAmountRequested() != 0 && request.getAmountPayed() <= project.getAmountRequested() && project.getStatu().equals(Statu.accepté)) {
 
 
             // assigner le projet à la demande de partenariat
@@ -86,5 +87,28 @@ public class RequestPartnershipService implements IRequestPartnership{
 
         return sortedRequests;
     }
+
+
+
+    public void removeRequestAndAdjustAmount(Long requestId, Long projectId) {
+        // récupérer le projet à partir de l'ID
+        PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
+        RequestPartnership request = requestPartnershipRepository.findById(requestId).orElse(null);
+
+        if (project != null && project.getRequestPartnerships().contains(request)) {
+            // supprimer la demande de partenariat de la liste
+            project.getRequestPartnerships().remove(request);
+            //Màj de amountRequested
+            Long amountRequested = project.getAmountRequested() + request.getAmountPayed();
+            project.setAmountRequested(amountRequested);
+            // enregistrer les changements dans la base de données
+            partnershipProjectRepository.save(project);
+            requestPartnershipRepository.delete(request);
+            System.out.println("La demande de partenariat a été supprimée du projet avec succès.");
+        } else {
+            System.out.println("Impossible de supprimer la demande de partenariat du projet. Vérifiez l'ID du projet fourni.");
+        }
+    }
+
 
 }

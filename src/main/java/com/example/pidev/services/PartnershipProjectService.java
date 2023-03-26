@@ -6,6 +6,7 @@ import com.example.pidev.Entities.RequestPartnership;
 import com.example.pidev.Entities.Statu;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
@@ -143,7 +144,20 @@ PartnershipProjectRepository partnershipProjectRepository;
     }
 
 
-
+    @Scheduled(cron = "*/15 * * * * *")
+    public PartnershipProject BestProject() {
+        List<PartnershipProject> projects = partnershipProjectRepository.findAll();
+        PartnershipProject bestProject = null;
+        int bestScore = 4;
+        for (PartnershipProject project : projects) {
+            int score = calculateProjectPoints(project);
+            if (score > bestScore) {
+                bestProject = project;
+                bestScore = score;
+            }
+        }
+        return bestProject;
+    }
 
 
 }
