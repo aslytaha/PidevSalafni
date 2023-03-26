@@ -19,5 +19,6 @@ public interface IRequestPartnership {
     void deleteRequestPartnership( Long idRequest);
 
      void addRequestAndAssignToProject(RequestPartnership request, Long projectId);
+    List<RequestPartnership> sortPartnershipRequestsByAmountPayed(Long projectId);
 
 }

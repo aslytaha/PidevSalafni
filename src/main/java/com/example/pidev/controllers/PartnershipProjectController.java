@@ -76,6 +76,16 @@ public class PartnershipProjectController {
     }
 
 
+    @PutMapping("/{projectId}/status")
+    public ResponseEntity<String> updateProjectStatus(@PathVariable Long projectId) {
+        try {
+            partnershipProject.validerProject(projectId);
+            return ResponseEntity.ok("Project status updated successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid project ID.");
+        }
+    }
+
 
 
 }

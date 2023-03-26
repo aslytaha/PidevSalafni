@@ -34,6 +34,9 @@ public class PartnershipProject implements Serializable {
     private String activityArea;
     @Enumerated(EnumType.STRING)
     private Act act=Act.owner;
+    @Enumerated(EnumType.STRING)
+    private Statu statu=Statu.en_cours;
+
 
 
 

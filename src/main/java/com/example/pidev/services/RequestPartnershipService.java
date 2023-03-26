@@ -8,7 +8,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class RequestPartnershipService implements IRequestPartnership{
@@ -67,4 +71,20 @@ public class RequestPartnershipService implements IRequestPartnership{
             System.out.println("Impossible d'assigner la demande de partenariat au projet. Vérifiez l'ID du projet fourni.");
         }
     }
+
+
+
+    public List<RequestPartnership> sortPartnershipRequestsByAmountPayed(Long projectId) {
+        // récupérer le projet par son ID
+        PartnershipProject project = partnershipProjectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Le projet n'existe pas"));
+
+        // trier les demandes de partenariat selon le montant payé
+        List<RequestPartnership> sortedRequests = project.getRequestPartnerships().stream()
+                .sorted(Comparator.comparing(RequestPartnership::getAmountPayed).reversed())
+                .collect(Collectors.toList());
+
+        return sortedRequests;
+    }
+
 }

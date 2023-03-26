@@ -2,6 +2,8 @@ package com.example.pidev.services;
 
 import com.example.pidev.Entities.Act;
 import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.Entities.Statu;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -84,6 +87,60 @@ PartnershipProjectRepository partnershipProjectRepository;
 
 
 
+
+
+    public void validerProject(Long projectId) {
+
+        PartnershipProject project = partnershipProjectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project ID"));
+
+        // Calculer le nombre de points du projet
+        int points = calculateProjectPoints(project);
+
+        // Mettre à jour le statut du projet
+        if (points < 5) {
+            project.setStatu(Statu.refusé);
+        } else {
+            project.setStatu(Statu.accepté);
+        }
+
+        partnershipProjectRepository.save(project);
+    }
+
+    private int calculateProjectPoints(PartnershipProject project) {
+        // Calculer le pourcentage de financement actuel
+        double fundingPercentage = ((double)project.getAmountRequested()/project.getAmountTotal()) * 100;
+
+        long projectDuration = ChronoUnit.DAYS.between(project.getStartDate().toInstant(), project.getFinishDate().toInstant());
+
+        // Assigner des points en fonction des mesures obtenues
+        int points = 0;
+        if (fundingPercentage >= 90) {
+            points += 0;
+        } else if (fundingPercentage >= 70) {
+            points += 1;
+        } else if (fundingPercentage >= 50) {
+            points += 2;
+        }else if (fundingPercentage >= 30) {
+            points += 3;
+        }else if (fundingPercentage >= 1) {
+            points += 4;
+        }
+
+        if (projectDuration >= 365) {
+            points += 0;
+        } else if (projectDuration >= 270) {
+            points += 1;
+        } else if (projectDuration >= 180) {
+            points += 2;
+        }else if (projectDuration >= 90) {
+            points += 3;
+        }else if (projectDuration >= 1) {
+            points += 4;
+        }
+
+        return points;
+    }
 
 
 

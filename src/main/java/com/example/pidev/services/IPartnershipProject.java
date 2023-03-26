@@ -25,6 +25,8 @@ public interface IPartnershipProject {
 
     List<PartnershipProject> findBestProjects(double investmentAmount);
 
+    public void validerProject(Long projectId);
+
 
 
 

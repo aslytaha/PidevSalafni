@@ -57,4 +57,12 @@ public class RequestPartnershipController {
         return ResponseEntity.ok(".");
     }
 
+
+    @GetMapping("/projects/{projectId}/partnership-requests")
+    public ResponseEntity<List<RequestPartnership>> getSortedPartnershipRequests(@PathVariable Long projectId) {
+        List<RequestPartnership> sortedRequests = requestPartnership.sortPartnershipRequestsByAmountPayed(projectId);
+        return ResponseEntity.ok(sortedRequests);
+    }
+
+
 }
