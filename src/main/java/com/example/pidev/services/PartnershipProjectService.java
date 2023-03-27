@@ -68,7 +68,8 @@ PartnershipProjectRepository partnershipProjectRepository;
         for (PartnershipProject project : projects) {
             if (investmentAmount >= 0.2 * project.getAmountTotal() && investmentAmount<= project.getAmountRequested() ) {
                 long projectDuration = ChronoUnit.DAYS.between(project.getStartDate().toInstant(), project.getFinishDate().toInstant());
-                double projectShareValue = project.getShareofProject() / projectDuration;
+                double win=investmentAmount/project.getAmountTotal();
+                double projectShareValue = win / projectDuration;
 
                 projectShareValues.put(project, projectShareValue); // store the projectShareValue in the map
             }
@@ -99,7 +100,7 @@ PartnershipProjectRepository partnershipProjectRepository;
         int points = calculateProjectPoints(project);
 
         // Mettre à jour le statut du projet
-        if (points < 5) {
+        if (points < 4) {
             project.setStatu(Statu.refusé);
         } else {
             project.setStatu(Statu.accepté);

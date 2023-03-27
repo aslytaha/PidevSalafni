@@ -5,13 +5,11 @@ import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.services.IPartnershipProject;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -35,9 +33,9 @@ public class PartnershipProjectController {
 
 
     @GetMapping("/projects/search")
-    public ResponseEntity<List<PartnershipProject>> searchProjectsByActivityArea(@RequestParam("activityArea") String activityArea) {
+    public List<PartnershipProject> searchProjectsByActivityArea(@RequestParam("activityArea") String activityArea) {
         List<PartnershipProject> projects = partnershipProject.getProjectsByActivityArea(activityArea);
-        return ResponseEntity.ok(projects);
+        return projects;
     }
 
     // http://localhost:8089/salafni/partnership/retrieve-partnership/{partnership-id}
@@ -69,21 +67,20 @@ public class PartnershipProjectController {
 
 
     @GetMapping("/projects/best")
-    public ResponseEntity<List<PartnershipProject>> findBestProjects(@RequestParam double investmentAmount) {
+    public List<PartnershipProject> findBestProjects(@RequestParam double investmentAmount) {
        // List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         List<PartnershipProject> bestProjects = partnershipProject.findBestProjects(investmentAmount);
-        return ResponseEntity.ok().body(bestProjects);
+        return bestProjects;
     }
 
 
     @PutMapping("/{projectId}/status")
-    public ResponseEntity<String> updateProjectStatus(@PathVariable Long projectId) {
-        try {
+    public Optional<PartnershipProject> updateProjectStatus(@PathVariable Long projectId) {
+
             partnershipProject.validerProject(projectId);
-            return ResponseEntity.ok("Project status updated successfully.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid project ID.");
-        }
+        Optional<PartnershipProject> p=partnershipProjectRepository.findById(projectId);
+            return p;
+
     }
 
 

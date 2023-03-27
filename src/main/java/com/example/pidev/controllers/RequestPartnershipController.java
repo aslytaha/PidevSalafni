@@ -3,6 +3,7 @@ package com.example.pidev.controllers;
 
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.services.IPartnershipProject;
 import com.example.pidev.services.IRequestPartnership;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class RequestPartnershipController {
 
     IRequestPartnership requestPartnership;
     IPartnershipProject partnershipProject;
+    PartnershipProjectRepository partnershipProjectRepository;
 
     // http://localhost:8089/salafni/request/retrieve-all-request
     @GetMapping("/retrieve-all-request")
@@ -55,16 +58,17 @@ public class RequestPartnershipController {
 
 
     @PostMapping("/projects/{projectId}/requests")
-    public ResponseEntity<String> addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
+    public Optional<PartnershipProject> addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
         requestPartnership.addRequestAndAssignToProject(request, projectId);
-        return ResponseEntity.ok(".");
+        Optional<PartnershipProject> p =partnershipProjectRepository.findById(projectId);
+        return p;
     }
 
 
     @GetMapping("/projects/{projectId}/partnership-requests")
-    public ResponseEntity<List<RequestPartnership>> getSortedPartnershipRequests(@PathVariable Long projectId) {
+    public List<RequestPartnership> getSortedPartnershipRequests(@PathVariable Long projectId) {
         List<RequestPartnership> sortedRequests = requestPartnership.sortPartnershipRequestsByAmountPayed(projectId);
-        return ResponseEntity.ok(sortedRequests);
+        return sortedRequests;
     }
 
 
