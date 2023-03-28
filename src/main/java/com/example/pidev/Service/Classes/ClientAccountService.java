@@ -14,10 +14,7 @@ import java.util.List;
 public class ClientAccountService implements IClientAccount {
     private ClientAccountRepository clientaccountRepository;
 
-    @Override
-    public ClientAccount addClientAccount(ClientAccount c) {
-        return clientaccountRepository.save(c);
-    }
+
     @Override
     public ClientAccount updateClientAccount(ClientAccount c) {
         return clientaccountRepository.save(c);
@@ -33,5 +30,9 @@ public class ClientAccountService implements IClientAccount {
     @Override
     public ClientAccount getClientAccountById(Integer IDClient) {
         return clientaccountRepository.findById(IDClient).get();
+    }
+    @Override
+    public List<ClientAccount> selectAll() {
+        return clientaccountRepository.findAll();
     }
 }

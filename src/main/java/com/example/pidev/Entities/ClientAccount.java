@@ -23,6 +23,8 @@ public class ClientAccount {
     private Boolean Subscription ;
     private String ExpirationDate ;
 
+    private  Long rib;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
     private Set<Transaction> transactions;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")

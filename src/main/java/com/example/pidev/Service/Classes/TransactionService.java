@@ -2,6 +2,7 @@ package com.example.pidev.Service.Classes;
 import com.example.pidev.Entities.ClientAccount;
 import com.example.pidev.Repository.ClientAccountRepository;
 import com.example.pidev.Repository.TransactionRepository;
+import com.example.pidev.Service.Interface.IClientAccount;
 import com.example.pidev.Service.Interface.ITransaction;
 import com.example.pidev.Entities.Transaction;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class TransactionService implements ITransaction {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    IClientAccount  iClientAccount;
 
     @Transactional
 //      (propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -53,6 +57,39 @@ public class TransactionService implements ITransaction {
         transaction.setAmount(Amount);
         transaction.setDate(LocalDateTime.now());
         transactionRepository.save(transaction);
+    }
+    @Override
+    public int addTransaction(Transaction s) {
+        Long source = s.getRibsource();
+        Long des = s.getRibrecipient();
+        List<ClientAccount> clientAccountList = iClientAccount.selectAll();
+        for (ClientAccount clientAccount : clientAccountList)
+        {
+            if (clientAccount.getRib()==source) {
+                float sold = clientAccount.getSolde();
+                clientAccount.setSolde(sold +s.getAmount());
+                if (clientAccount.getRib()==des) {
+                    float a = clientAccount.getSolde();
+
+                    clientAccount.setSolde(a +s.getAmount());}}
+        }
+        transactionRepository.save(s);
+        return 0;
+    }
+    @Override
+    public String approveTransaction(Transaction s) throws MessagingException {
+        int code =0;
+
+        if((addTransaction(s)==code))
+        {
+            transactionRepository.save(s);
+            return "transaction approuvée " ;
+        }
+        else
+        {
+            return "Transaction non approuvée" ;
+        }
+
     }
 
 

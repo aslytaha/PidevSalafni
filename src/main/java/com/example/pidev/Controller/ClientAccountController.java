@@ -19,13 +19,13 @@ public class ClientAccountController {
 
     @PostMapping("/add")
     public ClientAccount addClientAccount(@RequestBody ClientAccount c) {
-        return clientAccountService .addClientAccount(c);
+        return clientAccountService.addClientAccount(c);
     }
 
 
     @PutMapping("/update")
     public ClientAccount updateClientAccount(@RequestBody ClientAccount c) {
-        return clientAccountService .updateClientAccount(c);
+        return clientAccountService.updateClientAccount(c);
     }
 
 
@@ -33,20 +33,20 @@ public class ClientAccountController {
 
     public void deleteClientAccount(@PathVariable("IDClient") Integer IDClient)
     {
-        clientAccountService .deleteClientAccount(IDClient);
+        clientAccountService.deleteClientAccount(IDClient);
     }
 
 
     @GetMapping("/getAll")
     public List<ClientAccount> getAllClientAccount(){
-        return clientAccountService .getAllClientAccount();
+        return clientAccountService.getAllClientAccount();
     }
 
 
     @GetMapping("/getByID/{IDClient}")
     public ClientAccount getByClientAccount(@PathVariable("IDClient") Integer IDClient)
     {
-        return clientAccountService .getClientAccountById(IDClient);
+        return clientAccountService.getClientAccountById(IDClient);
     }
 
 }

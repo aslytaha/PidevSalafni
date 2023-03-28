@@ -4,9 +4,10 @@ import java.util.List;
 
 public interface IClientAccount {
 
-    ClientAccount addClientAccount(ClientAccount c);
+
     ClientAccount updateClientAccount(ClientAccount c);
     void deleteClientAccount(Integer idClient);
     List<ClientAccount> getAllClientAccount();
     ClientAccount getClientAccountById(Integer idClient);
+    List<ClientAccount> selectAll();
 }

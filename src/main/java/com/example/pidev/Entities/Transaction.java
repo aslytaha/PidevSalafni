@@ -1,10 +1,12 @@
 package com.example.pidev.Entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -22,6 +24,12 @@ public class Transaction {
     private Float Amount;
     private LocalDateTime date;
     private String Transaction_type;
+    private Long ribsource;
+    private Long ribrecipient ;
+
+    @ManyToMany
+    @JsonIgnore
+    List<ClientAccount> clientAccountList;
 
 
 

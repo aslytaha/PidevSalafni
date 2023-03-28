@@ -19,7 +19,7 @@ import java.util.List;
 public class TransactionController {
     @Autowired
     TransactionService transactionService;
-
+    @Autowired
     ClientAccountRepository clientAccountRepository;
 
     @PostMapping("/depot")
