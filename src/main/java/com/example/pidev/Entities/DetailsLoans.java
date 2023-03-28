@@ -24,18 +24,18 @@ public class DetailsLoans  implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDetails;
-    private Number amountborrowed;
+    private Float amountborrowed;
     private Date LoanDate;
     private Date RefundDate;
-    private Number RefundAmount;
+    private Float RefundAmount;
     private Integer nbborrowers;
     private String BorrowedName;
     @Enumerated(EnumType.STRING)
     private status Status;
 
-//    @OneToMany(mappedBy = "detailsloan")
-//    private Set<LoanProject> Loanprojects;
 
-    @OneToOne
+
+    @OneToOne()
     private LoanProject loanProject;
+//icimappedby
 }

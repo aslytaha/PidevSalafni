@@ -28,7 +28,7 @@ public class LoanProject implements Serializable {
     private Long Idprojet;
     private String projectname;
     private String description;
-    private Number loanamount;
+    private Float loanamount;
     private Date startdate;
     private Date finishdate;
     private Date refundperiod;
@@ -38,9 +38,7 @@ public class LoanProject implements Serializable {
     private Boolean validate;
 
 
-    //    @ManyToOne
-//    DetailsLoans detailsloan;
-    @OneToOne(mappedBy="loanProject")
+    @OneToOne(mappedBy="loanProject", cascade = CascadeType.REMOVE)
     private DetailsLoans detailsLoans;
 
     @ManyToOne

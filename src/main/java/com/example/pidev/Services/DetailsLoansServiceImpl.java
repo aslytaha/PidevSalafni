@@ -23,7 +23,8 @@ public  class DetailsLoansServiceImpl implements Idetails{
 
     @Override
     public DetailsLoans getDetailsLoansById(Integer id) {
-        return detailsLoansRepository.findById(id).orElse(null);
+//        return detailsLoansRepository.findById(id).orElse(null);
+        return detailsLoansRepository.findById(id).get();
     }
     @Override
     public DetailsLoans update(DetailsLoans p) {
