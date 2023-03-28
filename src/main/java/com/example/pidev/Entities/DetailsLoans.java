@@ -27,6 +27,8 @@ public class DetailsLoans  implements Serializable  {
 
     @OneToMany(mappedBy = "detailsloan")
     private Set<LoanProject> Loanprojects;
+    @OneToOne()
+    private LoanProject loanProject;
 
 
 }
