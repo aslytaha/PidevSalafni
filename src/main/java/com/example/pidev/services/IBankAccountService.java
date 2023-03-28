@@ -8,7 +8,5 @@ import java.util.Optional;
 public interface IBankAccountService {
     public BankAccount addBankAccount(BankAccount ba);
     public BankAccount updateBankAccount(BankAccount ba);
-    public List<BankAccount> getAllBankAccount();
-    public Optional<BankAccount> getBankAccountById(Integer baId);
-    public void deleteBankAccount(Integer baId);
+   // public void deleteBankAccount(Integer baId);
 }

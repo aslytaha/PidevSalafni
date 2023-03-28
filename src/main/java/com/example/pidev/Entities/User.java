@@ -36,7 +36,6 @@ public class User implements Serializable {
     @OneToOne
     private ClientAccount clientaccount;
 
-    // constructeurs, getters et setters
 }
 
 

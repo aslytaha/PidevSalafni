@@ -17,16 +17,9 @@ public class BankAccountController {
     public BankAccount updatebankaccount(@RequestBody BankAccount ba){
         return bankAccountService.updateBankAccount(ba);
     }
-    @DeleteMapping("/delete/{id}")
-    public void deleteBankAccount(@PathVariable("id") Integer baId){
-        bankAccountService.deleteBankAccount(baId);
-    }
-    @GetMapping("/getAll")
-    public List<BankAccount> getAllBankAccount(){
-        return bankAccountService.getAllBankAccount();
-    }
-    @GetMapping("/getByID/{id}")
-    public Optional<BankAccount> getByBankAccount(@PathVariable("id") Integer baId){
-        return bankAccountService.getBankAccountById(baId);
-    }
+  //  @DeleteMapping("/delete/{id}")
+   // public void deleteBankAccount(@PathVariable("id") Integer baId){
+    //    bankAccountService.deleteBankAccount(baId);
+   // }
+
 }

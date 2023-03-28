@@ -30,6 +30,8 @@ public class LoanProject implements Serializable {
 
     @ManyToOne
     DetailsLoans detailsloan;
+    @OneToOne
+    private Assurance assurance;
 
     @ManyToOne
     ClientAccount clientaccount;

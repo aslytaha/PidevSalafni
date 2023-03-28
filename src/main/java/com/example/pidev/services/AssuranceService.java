@@ -1,6 +1,7 @@
 package com.example.pidev.services;
 
 import com.example.pidev.Entities.Assurance;
+import com.example.pidev.Entities.LoanProject;
 import com.example.pidev.Repositories.AssuranceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Service
 public class AssuranceService implements IAssuranceService{
     AssuranceRepository assuranceRepository;
+    LoanProjectRepository loanProjectRepository;
     @Override
     public Assurance addAssurance(Assurance as) {
         return assuranceRepository.save(as);
@@ -36,4 +38,16 @@ public class AssuranceService implements IAssuranceService{
     public void deleteAssurance(Integer asID) {
         assuranceRepository.deleteById(asID);
     }
+
+    @Override
+    public void AddAssuranceAndAssignToProject(Assurance assurance, Long Idproject) {
+
+    }
+
+    @Override
+    public Assurance addAssuranceAndAssignToLoanProject(Assurance assurance, Long Idprojet) {
+        Assurance a= assuranceRepository.save(assurance);
+        LoanProject lp = loanProjectRepository.findById(Idprojet);
+        a.getLoanproject().add(lp);
+        return assuranceRepository.save(a); }
 }

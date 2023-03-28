@@ -33,4 +33,10 @@ public class AssuranceController {
     public Assurance getByAssurance(@PathVariable("id") Integer asID){
         return assuranceService.getAssuranceById(asID);
     }
+    @PostMapping("/add-AssuranceLoanProject{Idprojet}")
+    public Assurance AddAssuranceToLoanProject (@RequestBody Assurance a , @PathVariable("Idprojet") Long Idprojet)
+    {
+        Assurance assurance=assuranceService.addAssuranceAndAssignToLoanProject(a,Idprojet);
+        return assurance;
+    }
 }

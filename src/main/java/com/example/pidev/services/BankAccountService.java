@@ -21,18 +21,8 @@ BankAccountRepository bankAccount;
         return bankAccount.save(ba);
     }
 
-    @Override
-    public List<BankAccount> getAllBankAccount() {
-        return bankAccount.findAll();
-    }
-
-    @Override
-    public Optional<BankAccount> getBankAccountById(Integer baId) {
-        return Optional.ofNullable(bankAccount.findById(baId).orElse(null));
-    }
-
-    @Override
-    public void deleteBankAccount(Integer baId) {
-        bankAccount.deleteById(baId);
-    }
+  //  @Override
+   // public void deleteBankAccount(Integer baId) {
+     //   bankAccount.deleteById(baId);
+   // }
 }
