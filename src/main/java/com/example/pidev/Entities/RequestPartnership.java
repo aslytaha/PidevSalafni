@@ -1,5 +1,10 @@
 package com.example.pidev.Entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 
@@ -7,6 +12,10 @@ import javax.persistence.*;
 
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table( name = "RequestPartnership")
 public class RequestPartnership implements Serializable {
 

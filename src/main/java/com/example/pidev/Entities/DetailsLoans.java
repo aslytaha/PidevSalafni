@@ -1,4 +1,9 @@
 package com.example.pidev.Entities;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -7,6 +12,10 @@ import java.util.Set;
 
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 //@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "details_loans")
 public class DetailsLoans  implements Serializable  {

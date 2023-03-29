@@ -1,12 +1,20 @@
 package com.example.pidev.Entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table( name = "PartnershipProject")
 public class PartnershipProjects implements Serializable {
     @Id
