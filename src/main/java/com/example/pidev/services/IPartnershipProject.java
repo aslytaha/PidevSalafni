@@ -28,6 +28,7 @@ public interface IPartnershipProject {
     public void validerProject(Long projectId);
 
     public PartnershipProject BestProject();
+    void sendEmailToClient(Long projectId, String message,String subject);
 
 
 

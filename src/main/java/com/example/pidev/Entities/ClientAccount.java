@@ -23,7 +23,7 @@ public class ClientAccount {
     private Set<LoanProject> loanproject;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
-    private Set<PartnershipProject> partnershipproject;
+    private Set<RequestPartnership> requestPartnerships;
 
 
 

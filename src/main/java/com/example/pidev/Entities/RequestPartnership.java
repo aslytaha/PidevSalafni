@@ -37,5 +37,9 @@ public class RequestPartnership implements Serializable {
     @ManyToOne
     @JsonBackReference
     PartnershipProject partnershipProjects;
+
+    @ManyToOne
+    ClientAccount clientaccount;
+
 }
 

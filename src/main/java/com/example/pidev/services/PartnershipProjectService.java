@@ -1,9 +1,6 @@
 package com.example.pidev.services;
 
-import com.example.pidev.Entities.Act;
-import com.example.pidev.Entities.PartnershipProject;
-import com.example.pidev.Entities.RequestPartnership;
-import com.example.pidev.Entities.Statu;
+import com.example.pidev.Entities.*;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +15,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PartnershipProjectService implements IPartnershipProject{
 PartnershipProjectRepository partnershipProjectRepository;
+    private EmailService emailService;
+
     @Override
     public List<PartnershipProject> retrieveAllPartnershipProjects() {
         return partnershipProjectRepository.findAll();
@@ -104,6 +103,7 @@ PartnershipProjectRepository partnershipProjectRepository;
             project.setStatu(Statu.refusé);
         } else {
             project.setStatu(Statu.accepté);
+            sendEmailToClient(projectId, "Votre projet a été validé.","hhhhh");
         }
 
         partnershipProjectRepository.save(project);
@@ -158,6 +158,19 @@ PartnershipProjectRepository partnershipProjectRepository;
             }
         }
         return bestProject;
+    }
+
+
+
+
+
+    public void sendEmailToClient(Long projectId, String message,String subject) {
+        PartnershipProject project = partnershipProjectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project ID"));
+
+        User user = project.getUser();
+
+        emailService.sendEmail(user.getEmail(),subject, message);
     }
 
 
