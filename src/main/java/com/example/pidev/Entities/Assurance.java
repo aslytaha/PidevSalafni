@@ -7,8 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
-    @Entity
+@Entity
     @Getter
     @Setter
     @AllArgsConstructor
@@ -25,8 +26,9 @@ import java.io.Serializable;
         private String mail;
         private Long phone;
 
-        @ManyToOne
-        LoanProject Loanproject;
+        @OneToMany(mappedBy = "Assurances", cascade = CascadeType.ALL)
+        private Set<LoanProject> loanProjects;
+
 
 
     }

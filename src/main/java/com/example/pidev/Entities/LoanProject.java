@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -29,18 +30,25 @@ public class LoanProject implements Serializable {
     private String projectname;
     private String description;
     private Float loanamount;
+    private Float remainingamount;
+
     private Date startdate;
     private Date finishdate;
-    private Date refundperiod;
+    private Integer refundperiod;
     private String owner;
     @Enumerated(EnumType.STRING)
     private actarea activityarea;
     private Boolean validate;
 
+    @ManyToOne
+    Assurance Assurances;
 
     @OneToOne(mappedBy="loanProject", cascade = CascadeType.REMOVE)
     private DetailsLoans detailsLoans;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iduser")
+    private User user;
     @ManyToOne
     ClientAccount clientaccount;
 

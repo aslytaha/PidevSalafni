@@ -28,9 +28,14 @@ public  class DetailsLoansServiceImpl implements Idetails {
         return detailsLoansRepository.findById(id).get();
     }
 
-    @Override
-    public DetailsLoans update(DetailsLoans p) {
+  //  @Override
+    //public DetailsLoans updateD(DetailsLoans p) {
+//
+  //      return detailsLoansRepository.save(p);
+    //}
 
-        return detailsLoansRepository.save(p);
-    }
+ //   @Override
+   // public DetailsLoans addD(DetailsLoans de) {
+      //  return detailsLoansRepository.save(de);
+//    }
 }

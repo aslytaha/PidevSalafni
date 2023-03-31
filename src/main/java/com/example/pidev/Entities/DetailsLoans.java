@@ -26,17 +26,17 @@ public class DetailsLoans  implements Serializable  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="IdDetails")
     private Integer idDetails;
-    private Number amountborrowed;
+    private float amountborrowed;
     private Date LoanDate;
     private Date RefundDate;
-    private Number RefundAmount;
+    private float RefundAmount;
+    private Integer nbborrowers;
     private String BorrowedName;
     @Enumerated(EnumType.STRING)
     private status Status;
 
-    @OneToMany(mappedBy = "detailsloan")
-    private Set<LoanProject> Loanprojects;
-    @OneToOne()
+
+    @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)
     private LoanProject loanProject;
 
 

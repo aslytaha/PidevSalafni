@@ -40,16 +40,11 @@ public class AssuranceService implements IAssuranceService{
         assuranceRepository.deleteById(asID);
     }
 
-    @Override
-    public void AddAssuranceAndAssignToProject(Assurance assurance, Long Idproject) {
-
-    }
-
-    @Override
-    public Assurance addAssuranceAndAssignToLoanProject(Assurance assurance, Long Idprojet) {
-        Assurance a= assuranceRepository.save(assurance);
-        LoanProject lp = loanProjectRepository.findById(Idprojet).get();
-        a.getLoanproject();
-        return assuranceRepository.save(a);
-    }
+   // @Override
+    //public Assurance addAssuranceAndAssignToLoanProject(Assurance assurance, Long Idprojet) {
+      //  Assurance a= assuranceRepository.save(assurance);
+        //LoanProject lp = loanProjectRepository.findById(Idprojet).get();
+        //a.getLoanProjects();
+        //return assuranceRepository.save(a);
+    //}
 }

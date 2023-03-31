@@ -23,14 +23,14 @@ public class DetailsLoanController {
     }
 
 
-    @PutMapping("/updateDetails")
-    public DetailsLoans update(@RequestBody DetailsLoans d) {
-        DetailsLoans detailsloan= details.update(d);
-        return detailsloan;
-    }
+//    @PutMapping("/updateDetails")
+  //  public DetailsLoans update(@RequestBody DetailsLoans d) {
+    //    DetailsLoans detailsloan= details.updateD(d);
+      //  return detailsloan;
+    //}
 
-    @GetMapping("/retrieve-details/{details-id}")
-    public DetailsLoans retrievedetail(@PathVariable("DetailsLoans-details-id") Integer idDetails) {
-        return details.getDetailsLoansById(idDetails);
-    }
+   // @GetMapping("/retrieve-details/{details-id}")
+    //public DetailsLoans retrievedetail(@PathVariable("DetailsLoans-details-id") Integer idDetails) {
+      //  return details.getDetailsLoansById(idDetails);
+    //}
 }
