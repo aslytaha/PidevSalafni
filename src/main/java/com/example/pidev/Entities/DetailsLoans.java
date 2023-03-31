@@ -33,9 +33,7 @@ public class DetailsLoans  implements Serializable  {
     @Enumerated(EnumType.STRING)
     private status Status;
 
-
-
-    @OneToOne()
+    @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)
     private LoanProject loanProject;
-//icimappedby
+
 }

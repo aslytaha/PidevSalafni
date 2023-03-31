@@ -29,6 +29,8 @@ public class LoanProject implements Serializable {
     private String projectname;
     private String description;
     private Float loanamount;
+    private Float remainingamount;
+
     private Date startdate;
     private Date finishdate;
     private Date refundperiod;
@@ -38,11 +40,14 @@ public class LoanProject implements Serializable {
     private Boolean validate;
 
 
-    @OneToOne(mappedBy="loanProject", cascade = CascadeType.REMOVE)
+    @OneToOne()
     private DetailsLoans detailsLoans;
 
-    @ManyToOne
-    ClientAccount clientaccount;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iduser")
+    private User user;
 
 
 }

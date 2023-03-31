@@ -12,5 +12,8 @@ public interface Idetails {
 
     DetailsLoans getDetailsLoansById(Integer id);
 
-    DetailsLoans update(DetailsLoans p);
+
+    DetailsLoans updateD(DetailsLoans p);
+
+    DetailsLoans addD(DetailsLoans de);
 }

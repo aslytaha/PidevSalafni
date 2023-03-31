@@ -2,6 +2,7 @@ package com.example.pidev.Services;
 
 import com.example.pidev.Entities.DetailsLoans;
 import com.example.pidev.Entities.LoanProject;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,15 +16,20 @@ public interface Iloan {
 
     LoanProject getLoanProjectById(Long id);
 
-    LoanProject add(LoanProject p);
+
+    LoanProject createLoanProject(Authentication authentication, LoanProject loanProject);
 
     LoanProject update(LoanProject p);
 
     void delete(Long Idprojet);
 
-//    int countborrowerByProject(Float amountborrowed);
 
 
-    //
+    LoanProject addDetailsLoan(LoanProject loanProject, DetailsLoans detailsLoans);
 
+
+
+
+
+    LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed);
 }

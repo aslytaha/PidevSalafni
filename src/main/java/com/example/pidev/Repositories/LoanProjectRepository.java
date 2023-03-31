@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface LoanProjectRepository extends JpaRepository <LoanProject,Long> {
 
+
 //    @Query("SELECT l FROM LoanProject l WHERE DetailsLoans.Id= :idprojet")
 //    LoanProject getDetailByproject(@Param("idprojet") Long idprojet);
 
