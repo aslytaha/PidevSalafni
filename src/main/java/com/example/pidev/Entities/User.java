@@ -1,6 +1,7 @@
 package com.example.pidev.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,11 +44,13 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
     private Set<Profile> Profiles;
 
+    @JsonBackReference
     @OneToOne
     private ClientAccount clientaccount;
 
+
     // constructeurs, getters et setters
-    @JsonManagedReference
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
     private Set<PartnershipProject> partnershipProjects;
 

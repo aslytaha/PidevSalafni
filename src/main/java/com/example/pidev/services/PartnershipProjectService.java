@@ -2,7 +2,11 @@ package com.example.pidev.services;
 
 import com.example.pidev.Entities.*;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
+import com.example.pidev.Repositories.RequestPartnershipRepository;
+import com.example.pidev.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +17,17 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class PartnershipProjectService implements IPartnershipProject{
-PartnershipProjectRepository partnershipProjectRepository;
+     @Autowired
+    PartnershipProjectRepository partnershipProjectRepository;
+      @Autowired
+     RequestPartnershipRepository requestPartnershipRepository;
+@Autowired
+      RequestPartnershipService requestPartnershipService;
+@Autowired
+    UserRepository userRepository;
+   @Autowired
     private EmailService emailService;
 
     @Override
@@ -27,6 +40,7 @@ PartnershipProjectRepository partnershipProjectRepository;
 
         float shareofProject = ((float) p.getAmountRequested() / (float) p.getAmountTotal()) * 100;
         p.setShareofProject(shareofProject);
+      //  notifyUsersOfNewProjects(p, "psssst nouveau projet" + p.getProjectName(),"fidele");
         return partnershipProjectRepository.save(p);
     }
 
@@ -104,6 +118,7 @@ PartnershipProjectRepository partnershipProjectRepository;
         } else {
             project.setStatu(Statu.accepté);
             sendEmailToClient(projectId, "Votre projet a été validé.","hhhhh");
+            notifyUsersOfNewProjects(project,"fidele Salafni","psssst nouveau projet" + project.getProjectName() + project.getShareofProject() +project.getDescriptionProject()+"ne ratez pas cette chance");
         }
 
         partnershipProjectRepository.save(project);
@@ -145,7 +160,7 @@ PartnershipProjectRepository partnershipProjectRepository;
     }
 
 
-    @Scheduled(cron = "*/15 * * * * *")
+   // @Scheduled(cron = "*/15 * * * * *")
     public PartnershipProject BestProject() {
         List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         PartnershipProject bestProject = null;
@@ -164,6 +179,8 @@ PartnershipProjectRepository partnershipProjectRepository;
 
 
 
+
+
     public void sendEmailToClient(Long projectId, String message,String subject) {
         PartnershipProject project = partnershipProjectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID"));
@@ -171,6 +188,27 @@ PartnershipProjectRepository partnershipProjectRepository;
         User user = project.getUser();
 
         emailService.sendEmail(user.getEmail(),subject, message);
+    }
+
+
+    public List<User> getAllUsersWithRequests() {
+        List<RequestPartnership> requestPartnerships = requestPartnershipRepository.findAll();
+        Set<User> users = new HashSet<>();
+        for (RequestPartnership requestPartnership : requestPartnerships) {
+            Integer IdClient=requestPartnership.getClientaccount().getIDClient();
+            User user=userRepository.findUserByClientaccount(IdClient);
+            users.add(user);
+        }
+        return new ArrayList<>(users);
+    }
+
+    public void notifyUsersOfNewProjects(PartnershipProject p,String subject,String text) {
+
+        List<User> users = getAllUsersWithRequests();
+
+        for (User user : users) {
+            emailService.sendEmail(user.getEmail(), subject, text);
+        }
     }
 
 

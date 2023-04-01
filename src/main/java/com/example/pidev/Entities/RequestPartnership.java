@@ -1,6 +1,8 @@
 package com.example.pidev.Entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +37,12 @@ public class RequestPartnership implements Serializable {
 
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("request-project")
     PartnershipProject partnershipProjects;
-
-    @ManyToOne
+    @JsonBackReference
+    @JsonIgnoreProperties("clientaccount") // ignore clientaccount property during serialization
+    @ManyToOne(fetch = FetchType.LAZY)
+   // @JoinColumn(name = "IDClient")
     ClientAccount clientaccount;
 
 }

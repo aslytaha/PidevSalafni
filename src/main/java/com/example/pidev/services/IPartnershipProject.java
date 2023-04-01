@@ -2,6 +2,7 @@ package com.example.pidev.services;
 
 
 import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Entities.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,10 @@ public interface IPartnershipProject {
     public void validerProject(Long projectId);
 
     public PartnershipProject BestProject();
-    void sendEmailToClient(Long projectId, String message,String subject);
+  //  void sendEmailToClient(Long projectId, String message,String subject);
+
+     void notifyUsersOfNewProjects(PartnershipProject p,String subject,String text);
+    List<User> getAllUsersWithRequests();
 
 
 

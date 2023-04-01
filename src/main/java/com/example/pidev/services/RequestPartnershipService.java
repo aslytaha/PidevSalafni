@@ -1,25 +1,38 @@
 package com.example.pidev.services;
 
-import com.example.pidev.Entities.PartnershipProject;
-import com.example.pidev.Entities.RequestPartnership;
-import com.example.pidev.Entities.Statu;
+import com.example.pidev.Entities.*;
+import com.example.pidev.Repositories.ClientAccountRepository;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
+import com.example.pidev.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class RequestPartnershipService implements IRequestPartnership{
+    @Autowired
     RequestPartnershipRepository requestPartnershipRepository;
+    @Autowired
     PartnershipProjectRepository partnershipProjectRepository;
-
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    ClientAccountRepository clientAccountRepository;
     @Override
     public List<RequestPartnership> retrieveAllRequestPartnership() {
         return requestPartnershipRepository.findAll();
@@ -47,9 +60,9 @@ public class RequestPartnershipService implements IRequestPartnership{
     }
 
 
-    public void addRequestAndAssignToProject(RequestPartnership request, Long projectId) {
+    public RequestPartnership addRequestAndAssignToProject(RequestPartnership request, Long projectId) {
         // récupérer le projet à partir de l'ID
-        PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
+        PartnershipProject project = partnershipProjectRepository.findById(projectId).get();
 
         if (project != null && project.getAmountRequested() != 0 && request.getAmountPayed() <= project.getAmountRequested() && project.getStatu().equals(Statu.accepté)) {
 
@@ -64,13 +77,19 @@ public class RequestPartnershipService implements IRequestPartnership{
 
             float winPercentage = ((float) request.getAmountPayed() / (float) project.getAmountTotal()) * 100;
             request.setWinPercentage(winPercentage);
+
             // enregistrer les changements dans la base de données
             partnershipProjectRepository.save(project);
             requestPartnershipRepository.save(request);
             System.out.println("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
-        } else {
-            System.out.println("Impossible d'assigner la demande de partenariat au projet. Vérifiez l'ID du projet fourni.");
+
+            //sendEmailToClients(request, "Votre demande a été validé. passe au paiment","demande de partenariat");
+
         }
+        sendEmailToClients(request, "Votre demande a été validé. passe au paiment","demande de partenariat");
+
+
+        return request;
     }
 
 
@@ -109,6 +128,50 @@ public class RequestPartnershipService implements IRequestPartnership{
             System.out.println("Impossible de supprimer la demande de partenariat du projet. Vérifiez l'ID du projet fourni.");
         }
     }
+
+
+    public void sendEmailToClients(RequestPartnership request, String message,String subject) {
+         ClientAccount clientAccount=request.getClientaccount();
+         Integer IdClient=clientAccount.getIDClient();
+         User users=userRepository.findUserByClientaccount(IdClient);
+
+                 String Emailuser = users.getEmail();
+                 emailService.sendEmail(Emailuser,subject, message);
+
+
+
+    }
+
+
+    @Scheduled(cron = "*/15 * * * * *")
+    public List<RequestPartnership> getBestRequest() {
+        // Récupérer les 3 meilleures demandes de partenariat
+        List<RequestPartnership> requests = requestPartnershipRepository.findAllByOrderByAmountPayedDesc().stream().limit(3).collect(Collectors.toList());
+
+        // Parcourir les demandes et prolonger l'abonnement du client associé
+        for (RequestPartnership request : requests) {
+            ClientAccount clientaccount = request.getClientaccount();
+            // Prolonger l'abonnement de 30 jours
+            LocalDate currentDate = clientaccount.getExpirationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate newExpirationDate = currentDate.plusDays(30);
+            clientaccount.setExpirationDate(Date.from(newExpirationDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            // Envoi de l'email de notification
+            User user = userRepository.findUserByClientaccount(clientaccount.getIDClient());
+            String emailContent = "Votre abonnement a été prolongé suite à notre partenariat réussi.";
+            emailService.sendEmail(user.getEmail(), "Prolongation d'abonnement", emailContent);
+        }
+
+        // Retourner les 3 meilleures demandes de partenariat
+        return requests;
+    }
+
+
+
+
+
+
+
 
 
 }

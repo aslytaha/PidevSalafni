@@ -4,9 +4,14 @@ package com.example.pidev.controllers;
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
+import com.example.pidev.Repositories.RequestPartnershipRepository;
 import com.example.pidev.services.IPartnershipProject;
 import com.example.pidev.services.IRequestPartnership;
+import com.example.pidev.services.PartnershipProjectService;
+import com.example.pidev.services.RequestPartnershipService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,58 +21,64 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@NoArgsConstructor
 @RequestMapping("/request")
 public class RequestPartnershipController {
 
-    IRequestPartnership requestPartnership;
-    IPartnershipProject partnershipProject;
-    PartnershipProjectRepository partnershipProjectRepository;
 
+    @Autowired
+    PartnershipProjectService partnershipProjectService;
+    @Autowired
+    RequestPartnershipService requestPartnershipService;
+   @Autowired
+    PartnershipProjectRepository partnershipProjectRepository;
+@Autowired
+    RequestPartnershipRepository requestPartnershipRepository;
     // http://localhost:8089/salafni/request/retrieve-all-request
     @GetMapping("/retrieve-all-request")
     public List<RequestPartnership> getRequests() {
-        List<RequestPartnership> listRequests = requestPartnership.retrieveAllRequestPartnership();
+        List<RequestPartnership> listRequests = requestPartnershipService.retrieveAllRequestPartnership();
         return listRequests;
     }
 
     // http://localhost:8089/salafni/request/retrieve-request/2
     @GetMapping("/retrieve-request/{request-id}")
     public RequestPartnership retrieveRequest(@PathVariable("request-id") Long requestId) {
-        return requestPartnership.retrieveRequestPartnership(requestId);
+        return requestPartnershipService.retrieveRequestPartnership(requestId);
     }
 
     // http://localhost:8089/salafni/request/add-request
     @PostMapping("/add-request")
     public RequestPartnership addRequest(@RequestBody RequestPartnership r) {
-        RequestPartnership request = requestPartnership.addRequestPartnership(r);
+        RequestPartnership request = requestPartnershipService.addRequestPartnership(r);
         return request;
     }
 
     // http://localhost:8089/salafni/request/remove-request/1
     @DeleteMapping("/remove-request/{request-id}")
     public void removeRequest(@PathVariable("request-id") Long requestId) {
-        requestPartnership.deleteRequestPartnership(requestId);
+        requestPartnershipService.deleteRequestPartnership(requestId);
     }
 
     // http://localhost:8089/salafni/request/update-request
     @PutMapping("/update-request")
     public RequestPartnership updateRequest(@RequestBody RequestPartnership r) {
-        RequestPartnership request= requestPartnership.updateRequestPartnership(r);
+        RequestPartnership request= requestPartnershipService.updateRequestPartnership(r);
         return request;
     }
 
 
     @PostMapping("/projects/{projectId}/requests")
-    public Optional<PartnershipProject> addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
-        requestPartnership.addRequestAndAssignToProject(request, projectId);
-        Optional<PartnershipProject> p =partnershipProjectRepository.findById(projectId);
-        return p;
+    public RequestPartnership addRequestAndAssignToProject(@RequestBody RequestPartnership request, @PathVariable Long projectId) {
+     RequestPartnership requestPartnership=   requestPartnershipService.addRequestAndAssignToProject(request, projectId);
+
+        return requestPartnership;
     }
 
 
     @GetMapping("/projects/{projectId}/partnership-requests")
     public List<RequestPartnership> getSortedPartnershipRequests(@PathVariable Long projectId) {
-        List<RequestPartnership> sortedRequests = requestPartnership.sortPartnershipRequestsByAmountPayed(projectId);
+        List<RequestPartnership> sortedRequests = requestPartnershipService.sortPartnershipRequestsByAmountPayed(projectId);
         return sortedRequests;
     }
 
@@ -75,7 +86,7 @@ public class RequestPartnershipController {
     @DeleteMapping("/partnershipproject/{projectId}/requests/{requestId}")
     public ResponseEntity<String> removeRequestAndAdjustAmount(@PathVariable Long projectId, @PathVariable Long requestId) {
         try {
-            requestPartnership.removeRequestAndAdjustAmount(requestId, projectId);
+            requestPartnershipService.removeRequestAndAdjustAmount(requestId, projectId);
             return ResponseEntity.ok("La demande de partenariat a été supprimée avec succès.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue lors de la suppression de la demande de partenariat.");

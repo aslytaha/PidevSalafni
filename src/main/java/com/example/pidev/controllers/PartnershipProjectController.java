@@ -4,6 +4,7 @@ package com.example.pidev.controllers;
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.services.IPartnershipProject;
+import com.example.pidev.services.PartnershipProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/partnership")
 public class PartnershipProjectController {
-    IPartnershipProject partnershipProject;
+    PartnershipProjectService partnershipProject;
     PartnershipProjectRepository partnershipProjectRepository;
 
     // http://localhost:8089/salafni/partnership/retrieve-all-partnership
