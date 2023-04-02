@@ -45,16 +45,12 @@ public class Amortization implements Serializable {
     @Column(name = "remaining_amount")
     private float remainingAmount;
 
-    public Amortization(float principal, float interest, float total, Date paymentDate, int paymentNumber, float paymentAmount, float remainingAmount) {
-        this.principal = principal;
-        this.interest = interest;
-        this.total = total;
-        this.paymentDate = paymentDate;
-        this.paymentNumber = paymentNumber;
-        this.paymentAmount = paymentAmount;
-        this.remainingAmount = remainingAmount;
+    @Enumerated(EnumType.STRING)
+    private float status;
 
-    }
+
+
+    
     @ManyToOne
     private LoanProject loanproject;
 }

@@ -7,11 +7,10 @@ import com.example.pidev.Services.AmotizationService;
 import com.example.pidev.Services.LoanProjectServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,15 +24,19 @@ public class AmortizationController {
     @Autowired
     AmotizationService serv;
 
-    @GetMapping("/loan-project/{id}/amortization-table")
-    public List<Amortization> generateAmortizationTableForLoanProject(@PathVariable Long id) {
-        LoanProject loanProject = loan.getLoanProjectById(id);
-        Float loanAmount = loanProject.getLoanamount();
-        List<Amortization> amortizationTable = serv.generateAmortizationT(loanAmount, loanProject);
-        loanProject.setAmortizationTable(amortizationTable);
-        loan.update(loanProject);
-        return amortizationTable;
-    }
-
 
 }
+
+
+
+//    @GetMapping("/loan-project/{id}/amortization-table")
+//    public List<Amortization> generateAmortizationTableForLoanProject(@PathVariable Long id) {
+//        LoanProject loanProject = loan.getLoanProjectById(id);
+//        Float loanAmount = loanProject.getLoanamount();
+//        List<Amortization> amortizationTable = serv.generateAmortizationT(loanAmount, loanProject);
+//        loanProject.setAmortizationTable(amortizationTable);
+//        loan.update(loanProject);
+//        return amortizationTable;
+//    }
+
+

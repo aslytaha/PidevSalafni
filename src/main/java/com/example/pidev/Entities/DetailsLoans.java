@@ -29,10 +29,10 @@ public class DetailsLoans  implements Serializable  {
     private Date LoanDate;
     private Date RefundDate;
     private Float RefundAmount;
-    private Integer nbborrowers;
+
     private String BorrowedName;
-    @Enumerated(EnumType.STRING)
-    private status Status;
+
+
 
     @JsonBackReference
     @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)

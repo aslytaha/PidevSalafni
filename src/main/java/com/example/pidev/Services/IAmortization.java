@@ -4,30 +4,47 @@ import com.example.pidev.Entities.Amortization;
 import com.example.pidev.Entities.LoanProject;
 import com.example.pidev.Entities.type;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IAmortization {
+    List<Amortization> saveAll(List<Amortization> amortizationList);
 
-
-
-
-
-
-    //    public List<Amortization> generateAmortizationTable(Long Idprojet) {
-    //        LoanProject loanP = loan.findById(Idprojet).orElse(null);
+    //    public List<Amortization> generateConstantAmortizationTable(LocalDate startDate, LocalDate finishDate, Float loanAmount, type paymentType) {
+    //        List<Amortization> amortizationTable = new ArrayList<>();
+    //        int numPaymentsPerYear = 12; // by default, assume monthly payments
+    //        if (paymentType == type.QUARTERLY) {
+    //            numPaymentsPerYear = 4;
+    //        }
+    //        float interestRate = 0.15f; // assume fixed interest rate of 15%
+    //        int numPayments = calculateNumPayments(startDate, finishDate, numPaymentsPerYear, paymentType);
+    //        float monthlyInterestRate = interestRate / numPaymentsPerYear;
+    //        float monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, numPayments);
     //
-    //       Float  loanAmount = loanP.getLoanamount();
-    //        type paymentType = loanP.getPaymenttype();
-    //        int   numberOfPeriods = paymentType == type.MONTHLY ? 12 : 4;
+    //        float remainingBalance = loanAmount;
+    //        LocalDate currentDate = startDate;
+    //        for (int i = 0; i < numPayments; i++) {
+    //            float interest = remainingBalance * monthlyInterestRate;
+    //            float principal = monthlyPayment - interest;
+    //            if (remainingBalance - principal < 0) {
+    //                principal = remainingBalance;
+    //                monthlyPayment = principal + interest;
+    //            }
+    //            remainingBalance -= principal;
     //
-    //        // Call generateAmortizationTable method to generate the amortization table
-    //        List<Amortization> amortizationTable = generateAmortization(loanAmount, numberOfPeriods);
+    //            LocalDate paymentDat = calculatePaymentDate(startDate, i, paymentType);
+    //            Amortization amortization = new Amortization();
+    //            amortization.setPaymentNumber(i + 1);
+    //            amortization.setPaymentDate(java.sql.Date.valueOf(paymentDat));
+    //
+    //            amortization.setInterest(interest);
+    //            amortization.setPrincipal(principal);
+    //            amortization.setRemainingAmount(remainingBalance);
+    //            amortizationTable.add(amortization);
+    //            currentDate = calculateNextPaymentDate(currentDate, paymentType);
+    //        }
     //
     //        return amortizationTable;
     //    }
-
-
-    List<Amortization> generateAmortizationT(Float loanAmount, LoanProject loan);
-
-    List<Amortization> generateAmortizationTable(Float loanAmount, type paymentType, int numberOfPeriods);
+    List<Amortization> generateAmortizationTable(LoanProject loanproject);
 }

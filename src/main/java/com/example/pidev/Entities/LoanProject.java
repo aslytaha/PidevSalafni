@@ -33,14 +33,6 @@ public class LoanProject implements Serializable {
     private Float loanamount;
     private Float remainingamount;
 
-
-
-    // autres attributs et méthodes
-
-
-
-
-
     private Date startdate;
     private Date finishdate;
     private Date refundperiod;

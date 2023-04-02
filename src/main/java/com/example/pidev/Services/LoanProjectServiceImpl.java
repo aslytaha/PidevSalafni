@@ -1,10 +1,7 @@
 package com.example.pidev.Services;
 
 
-import com.example.pidev.Entities.DetailsLoans;
-import com.example.pidev.Entities.LoanProject;
-import com.example.pidev.Entities.User;
-import com.example.pidev.Entities.type;
+import com.example.pidev.Entities.*;
 import com.example.pidev.Repositories.DetailsLoansRepository;
 import com.example.pidev.Repositories.LoanProjectRepository;
 import com.example.pidev.Repositories.UserRepository;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.security.Principal;
@@ -35,6 +33,8 @@ public  class LoanProjectServiceImpl implements Iloan {
     DetailsLoansServiceImpl detailss;
     @Autowired
     UserRepository userop;
+    @Autowired
+    EmailService service;
 
 
 
@@ -165,10 +165,11 @@ public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed, Princip
         if (loanP != null) {
             // Mise à jour du montant total du prêt en soustrayant le montant emprunté
             remainingamount-=amountborrowed;
+            // Récupération de l'utilisateur connecté
             // Création d'une nouvelle entité DetailsLoans
             DetailsLoans newDetailsLoan = new DetailsLoans();
             newDetailsLoan.setAmountborrowed(amountborrowed);
-
+            newDetailsLoan.setBorrowedName(principal.getName());
         // Enregistrement du nouveau DetailsLoans dans la base de données
         detail.save(newDetailsLoan);
 
@@ -177,6 +178,22 @@ public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed, Princip
 
         // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
         loanP.setRemainingamount(remainingamount);
+
+            // Envoi d'un email à l'utilisateur qui a créé le projet de prêt
+            String to = loanP.getUser().getEmail();
+            String subject = "Nouveau dépôt sur le projet de prêt #" + loanP.getLoanamount();
+            String body = "Un montant de " + remainingamount + " a été déposé sur le projet de prêt #" + loanP.getLoanamount()
+                    + " par " + principal.getName();
+            Email email = new Email();
+            email.setTo(to);
+            email.setSubject(subject);
+            email.setBody(body);
+            try {
+                service.sendEmail(email);
+            } catch (MessagingException e) {
+                // Handle the exception
+                e.printStackTrace();
+            }
 
         // Enregistrement des changements dans la base de données
         projectRepository.save(loanP);

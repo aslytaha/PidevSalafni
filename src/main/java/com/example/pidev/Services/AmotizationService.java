@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -27,67 +27,124 @@ public class AmotizationService implements IAmortization{
     @Autowired
     AmortizationRepository repor;
 
-    @Override
-    public List<Amortization> generateAmortizationT(Float loanAmount, LoanProject loan) {
-        Long projectId = loan.getIdprojet(); // get the ID of the LoanProject object
-        type paymentType = loan.getPaymenttype();
-        int numberOfPeriods = paymentType == type.MONTHLY ? 12 : 4;
 
-        // Call generateAmortizationTable method to generate the amortization table
-        List<Amortization> amortizationTable = generateAmortizationTable(loanAmount, paymentType, numberOfPeriods);
-
-        // Set the LoanProject object for each Amortization object in the list
-        amortizationTable.forEach(a -> a.setLoanproject(loan));
-
-        return amortizationTable;
-    }
-
-//    private int getNumberOfPeriods(Date startDate, Date finishDate, type paymentType) {
-//        int numberOfPeriods;
-//        if (paymentType == type.MONTHLY) {
-//            numberOfPeriods = (int) ChronoUnit.MONTHS.between(startDate.toInstant(), finishDate.toInstant()) + 1;
-//        } else {
-//            numberOfPeriods = (int) ChronoUnit.MONTHS.between(startDate.toInstant(), finishDate.toInstant()) / 3 + 1;
-//        }
-//        return numberOfPeriods;
-//    }
-
+@Override
     public List<Amortization> saveAll(List<Amortization> amortizationList) {
         return repor.saveAll(amortizationList);
     }
-
+//    public List<Amortization> generateConstantAmortizationTable(LocalDate startDate, LocalDate finishDate, Float loanAmount, type paymentType) {
+//        List<Amortization> amortizationTable = new ArrayList<>();
+//        int numPaymentsPerYear = 12; // by default, assume monthly payments
+//        if (paymentType == type.QUARTERLY) {
+//            numPaymentsPerYear = 4;
+//        }
+//        float interestRate = 0.15f; // assume fixed interest rate of 15%
+//        int numPayments = calculateNumPayments(startDate, finishDate, numPaymentsPerYear, paymentType);
+//        float monthlyInterestRate = interestRate / numPaymentsPerYear;
+//        float monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, numPayments);
+//
+//        float remainingBalance = loanAmount;
+//        LocalDate currentDate = startDate;
+//        for (int i = 0; i < numPayments; i++) {
+//            float interest = remainingBalance * monthlyInterestRate;
+//            float principal = monthlyPayment - interest;
+//            if (remainingBalance - principal < 0) {
+//                principal = remainingBalance;
+//                monthlyPayment = principal + interest;
+//            }
+//            remainingBalance -= principal;
+//
+//            LocalDate paymentDat = calculatePaymentDate(startDate, i, paymentType);
+//            Amortization amortization = new Amortization();
+//            amortization.setPaymentNumber(i + 1);
+//            amortization.setPaymentDate(java.sql.Date.valueOf(paymentDat));
+//
+//            amortization.setInterest(interest);
+//            amortization.setPrincipal(principal);
+//            amortization.setRemainingAmount(remainingBalance);
+//            amortizationTable.add(amortization);
+//            currentDate = calculateNextPaymentDate(currentDate, paymentType);
+//        }
+//
+//        return amortizationTable;
+//    }
     @Override
-    public List<Amortization> generateAmortizationTable(Float loanAmount, type paymentType, int numberOfPeriods) {
-        List<Amortization> amortizationTable = new ArrayList<>();
-        int numPaymentsPerYear = 12; // by default, assume monthly payments
-        if (paymentType == type.QUARTERLY) {
-            numPaymentsPerYear = 4;
+public List<Amortization> generateAmortizationTable(LoanProject loanproject) {
+    Float loanAmount = loanproject.getLoanamount();
+    type paymentType = loanproject.getPaymenttype();
+    Date start = loanproject.getStartdate();
+    LocalDate startDate = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+    Date finishDate = loanproject.getFinishdate();
+    LocalDate localFinishDate = finishDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+    List<Amortization> amortizationTable = new ArrayList<>();
+    int numPaymentsPerYear = 12; // by default, assume monthly payments
+    if (paymentType == type.QUARTERLY) {
+        numPaymentsPerYear = 4;
+    }
+    float interestRate = 0.15f; // assume fixed interest rate of 15%
+    int numPayments = calculateNumPayments(startDate, localFinishDate, numPaymentsPerYear, paymentType);
+    float monthlyInterestRate = interestRate / numPaymentsPerYear;
+    float monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, numPayments);
+
+    float remainingBalance = loanAmount;
+    LocalDate currentDate = startDate;
+    for (int i = 0; i < numPayments; i++) {
+        float interest = remainingBalance * monthlyInterestRate;
+        float principal = monthlyPayment - interest;
+        if (remainingBalance - principal < 0) {
+            principal = remainingBalance;
+            monthlyPayment = principal + interest;
         }
-        int numPayments = numPaymentsPerYear * 1; // amortization table will be for 1 year
+        remainingBalance -= principal;
 
-        float interestRate = 0.15f; // assume fixed interest rate of 15%
-        float monthlyInterestRate = interestRate / numPaymentsPerYear;
-        float monthlyPayment = loanAmount * (monthlyInterestRate / (1 - (float) Math.pow(1 + monthlyInterestRate, -numPayments)));
+        LocalDate paymentDate = calculatePaymentDate(startDate, i, paymentType);
+        Amortization amortization = new Amortization();
+        amortization.setPaymentNumber(numPayments - i);
+        amortization.setPaymentDate(Date.from(paymentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        amortization.setInterest(interest);
+        amortization.setPrincipal(principal);
+        amortization.setRemainingAmount(remainingBalance);
+        amortization.setLoanproject(loanproject);
+        amortizationTable.add(amortization);
+        currentDate = calculateNextPaymentDate(currentDate, paymentType);
+    }
+//        Collections.sort(amortizationTable, new Comparator<Amortization>() {
+//            @Override
+//            public int compare(Amortization a1, Amortization a2) {
+//                return Integer.compare(a1.getPaymentNumber(), a2.getPaymentNumber());
+//            }
+//        });
+    return amortizationTable;
+}
 
-        float remainingBalance = loanAmount;
-        for (int i = 0; i < numPayments; i++) {
-            float interest = remainingBalance * monthlyInterestRate;
-            float principal = monthlyPayment - interest;
-            if (remainingBalance - principal < 0) {
-                principal = remainingBalance;
-                monthlyPayment = principal + interest;
-            }
-            remainingBalance -= principal;
-
-            Amortization amortization = new Amortization();
-            amortization.setPaymentNumber(i + 1);
-            amortization.setInterest(interest);
-            amortization.setPrincipal(principal);
-            amortization.setRemainingAmount(remainingBalance);
-            amortizationTable.add(amortization);
+    private int calculateNumPayments(LocalDate startDate, LocalDate finishDate, int numPaymentsPerYear, type paymentType) {
+        if (paymentType == type.MONTHLY) {
+            return (int) ChronoUnit.MONTHS.between(startDate, finishDate);
+        } else { // PaymentType.QUARTERLY
+            return (int) ChronoUnit.MONTHS.between(startDate, finishDate) / 3;
         }
+    }
 
-        return amortizationTable;
+    private float calculateMonthlyPayment(Float loanAmount, float monthlyInterestRate, int numPayments) {
+        return loanAmount * (monthlyInterestRate / (1 - (float) Math.pow(1 + monthlyInterestRate, -numPayments)));
+    }
+
+    private LocalDate calculatePaymentDate(LocalDate startDate, int paymentNumber, type paymentType) {
+        if (paymentType == type.MONTHLY) {
+            return startDate.plusMonths(paymentNumber);
+        } else { // PaymentType.QUARTERLY
+            return startDate.plusMonths(paymentNumber * 3);
+        }
+    }
+
+    private LocalDate calculateNextPaymentDate(LocalDate currentDate, type paymentType) {
+        if (paymentType == type.MONTHLY) {
+            return currentDate.plusMonths(1);
+        } else { // PaymentType.QUARTERLY
+            return currentDate.plusMonths(3);
+        }
     }
 
 
