@@ -30,9 +30,9 @@ public class RequestPartnershipController {
     PartnershipProjectService partnershipProjectService;
     @Autowired
     RequestPartnershipService requestPartnershipService;
-   @Autowired
+    @Autowired
     PartnershipProjectRepository partnershipProjectRepository;
-@Autowired
+    @Autowired
     RequestPartnershipRepository requestPartnershipRepository;
     // http://localhost:8089/salafni/request/retrieve-all-request
     @GetMapping("/retrieve-all-request")
@@ -45,26 +45,6 @@ public class RequestPartnershipController {
     @GetMapping("/retrieve-request/{request-id}")
     public RequestPartnership retrieveRequest(@PathVariable("request-id") Long requestId) {
         return requestPartnershipService.retrieveRequestPartnership(requestId);
-    }
-
-    // http://localhost:8089/salafni/request/add-request
-    @PostMapping("/add-request")
-    public RequestPartnership addRequest(@RequestBody RequestPartnership r) {
-        RequestPartnership request = requestPartnershipService.addRequestPartnership(r);
-        return request;
-    }
-
-    // http://localhost:8089/salafni/request/remove-request/1
-    @DeleteMapping("/remove-request/{request-id}")
-    public void removeRequest(@PathVariable("request-id") Long requestId) {
-        requestPartnershipService.deleteRequestPartnership(requestId);
-    }
-
-    // http://localhost:8089/salafni/request/update-request
-    @PutMapping("/update-request")
-    public RequestPartnership updateRequest(@RequestBody RequestPartnership r) {
-        RequestPartnership request= requestPartnershipService.updateRequestPartnership(r);
-        return request;
     }
 
 
@@ -92,6 +72,15 @@ public class RequestPartnershipController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue lors de la suppression de la demande de partenariat.");
         }
     }
+
+
+
+    @GetMapping("/partnership/best-requests")
+    public ResponseEntity<List<RequestPartnership>> getBestRequests() {
+        List<RequestPartnership> bestRequests = requestPartnershipService.getBestRequest();
+        return ResponseEntity.ok(bestRequests);
+    }
+
 
 
 }

@@ -26,6 +26,13 @@ public class PartnershipProjectController {
         return listPartnerships;
     }
 
+
+    @GetMapping("/all-partnership/{iduser}")
+    public List<PartnershipProject> getPartnershipsByUser(@PathVariable ("iduser") Long iduser) {
+        List<PartnershipProject> listPartnerships = partnershipProject.retrieveAllPartnershipProjectsByUser(iduser);
+        return listPartnerships;
+    }
+
     @GetMapping("/getProjectsSortedByShareOfProject")
     public List<PartnershipProject> getPartnershipsTrier(){
         List<PartnershipProject> lists= partnershipProject.getProjectsSortedByShareOfProject();
@@ -58,12 +65,6 @@ public class PartnershipProjectController {
         partnershipProject.deletePartnershipProject(partnershipId);
     }
 
-    // http://localhost:8089/salafni/partnership/update-partnership
-    @PutMapping("/update-partnership")
-    public PartnershipProject updatePartnership(@RequestBody PartnershipProject p) {
-        PartnershipProject partnership = partnershipProject.updatePartnershipProject(p);
-        return partnership;
-    }
 
 
 

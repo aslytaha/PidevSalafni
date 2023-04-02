@@ -14,8 +14,7 @@ public interface IPartnershipProject {
     List<PartnershipProject> retrieveAllPartnershipProjects();
 
     PartnershipProject addPartnershipProject(PartnershipProject p);
-
-    PartnershipProject updatePartnershipProject (PartnershipProject p);
+    List<PartnershipProject> retrieveAllPartnershipProjectsByUser(Long iduser);
 
     PartnershipProject retrievePartnershipProject (Long idPartnership);
 

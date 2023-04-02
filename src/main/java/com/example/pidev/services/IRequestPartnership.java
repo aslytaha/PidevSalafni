@@ -10,13 +10,10 @@ public interface IRequestPartnership {
 
     List<RequestPartnership> retrieveAllRequestPartnership();
 
-    RequestPartnership addRequestPartnership(RequestPartnership r);
-
-    RequestPartnership updateRequestPartnership (RequestPartnership r);
 
     RequestPartnership retrieveRequestPartnership (Long idRequest);
 
-    void deleteRequestPartnership( Long idRequest);
+
 
     RequestPartnership addRequestAndAssignToProject(RequestPartnership request, Long projectId);
     List<RequestPartnership> sortPartnershipRequestsByAmountPayed(Long projectId);

@@ -38,25 +38,10 @@ public class RequestPartnershipService implements IRequestPartnership{
         return requestPartnershipRepository.findAll();
     }
 
-    @Override
-    public RequestPartnership addRequestPartnership(RequestPartnership r) {
-        return requestPartnershipRepository.save(r);
-    }
-
-    @Override
-    public RequestPartnership updateRequestPartnership(RequestPartnership r) {
-        return requestPartnershipRepository.save(r);
-    }
 
     @Override
     public RequestPartnership retrieveRequestPartnership(Long idRequest) {
         return requestPartnershipRepository.findById(idRequest).get();
-    }
-
-    @Override
-    public void deleteRequestPartnership(Long idRequest) {
-        requestPartnershipRepository.deleteById(idRequest);
-
     }
 
 
@@ -143,7 +128,7 @@ public class RequestPartnershipService implements IRequestPartnership{
     }
 
 
-    @Scheduled(cron = "*/15 * * * * *")
+
     public List<RequestPartnership> getBestRequest() {
         // Récupérer les 3 meilleures demandes de partenariat
         List<RequestPartnership> requests = requestPartnershipRepository.findAllByOrderByAmountPayedDesc().stream().limit(3).collect(Collectors.toList());
@@ -155,7 +140,7 @@ public class RequestPartnershipService implements IRequestPartnership{
             LocalDate currentDate = clientaccount.getExpirationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate newExpirationDate = currentDate.plusDays(30);
             clientaccount.setExpirationDate(Date.from(newExpirationDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
+            clientAccountRepository.save(clientaccount);
             // Envoi de l'email de notification
             User user = userRepository.findUserByClientaccount(clientaccount.getIDClient());
             String emailContent = "Votre abonnement a été prolongé suite à notre partenariat réussi.";

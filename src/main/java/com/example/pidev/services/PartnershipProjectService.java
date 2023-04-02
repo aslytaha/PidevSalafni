@@ -23,16 +23,21 @@ public class PartnershipProjectService implements IPartnershipProject{
     PartnershipProjectRepository partnershipProjectRepository;
       @Autowired
      RequestPartnershipRepository requestPartnershipRepository;
-@Autowired
+      @Autowired
       RequestPartnershipService requestPartnershipService;
-@Autowired
+      @Autowired
     UserRepository userRepository;
-   @Autowired
+     @Autowired
     private EmailService emailService;
 
     @Override
     public List<PartnershipProject> retrieveAllPartnershipProjects() {
         return partnershipProjectRepository.findAll();
+    }
+
+    @Override
+    public List<PartnershipProject> retrieveAllPartnershipProjectsByUser(Long iduser) {
+        return partnershipProjectRepository.findPartnershipProjectByUserId (iduser);
     }
 
     @Override
@@ -44,10 +49,6 @@ public class PartnershipProjectService implements IPartnershipProject{
         return partnershipProjectRepository.save(p);
     }
 
-    @Override
-    public PartnershipProject updatePartnershipProject(PartnershipProject p) {
-        return partnershipProjectRepository.save(p);
-    }
 
     @Override
     public PartnershipProject retrievePartnershipProject(Long idPartnership) {
@@ -174,10 +175,6 @@ public class PartnershipProjectService implements IPartnershipProject{
         }
         return bestProject;
     }
-
-
-
-
 
 
 

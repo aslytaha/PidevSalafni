@@ -1,6 +1,7 @@
 package com.example.pidev.Repositories;
 
 import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,5 +16,7 @@ public interface PartnershipProjectRepository extends JpaRepository<PartnershipP
     List<PartnershipProject> findAllByOrderByShareofProjectDesc();
 
     List<PartnershipProject> findByActivityArea(String activityArea);
+
+    List<PartnershipProject> findPartnershipProjectByUserId (Long iduser);
 
 }
