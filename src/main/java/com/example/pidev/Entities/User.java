@@ -38,9 +38,12 @@ public class User implements Serializable  {
     private Date BirthDate;
     private Long Phone;
     private Long CIN;
+    private Integer IsVerified;
+    private String verificationToken;
+    private String verificationCode;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Users_Role",
             joinColumns = @JoinColumn(name = "iduser"),

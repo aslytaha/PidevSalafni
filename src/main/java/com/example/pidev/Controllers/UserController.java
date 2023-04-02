@@ -1,13 +1,24 @@
 package com.example.pidev.Controllers;
 
 import com.example.pidev.Entities.User;
-import com.example.pidev.Services.UserService;
+import com.example.pidev.Entities.UserCode;
+import com.example.pidev.Entities.VerificationToken;
+import com.example.pidev.Repositories.UserRepository;
+import com.example.pidev.Services.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -15,24 +26,112 @@ import java.util.List;
 @NoArgsConstructor
 public class UserController {
 
+    JavaMailSender mailSender;
+
+     @Autowired
+    SmsService smsService;
+    @Autowired
+    UserCodeService codeService;
+    @Autowired
+     UserService userService;
 
     @Autowired
-    private UserService userService;
-
-
-
-
-
+    ImplEmailService emailService;
     @Autowired
-    private UserDetailsService userDetailsService;
+    UserRepository userRepository;
+
+     @Autowired
+     VerificationTokenService verificationTokenService;
 
 
+//    @GetMapping("/profile")
+//    public User viewProfile(Authentication authentication) {
+//
+//        return (User) authentication.getPrincipal();
+//    }
 
-      @PostMapping({"/register"})
-        public User registerNewUser(@RequestBody User user) {
-        return userService.registerUser(user);
+//// Connected User Profile ////////
+    @GetMapping("/profile")
+    public User getConnectedUser(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userService.retrieveUserByUsername(username);
+        return user;
     }
 
+/////// Sign-UP ///////////
+
+    @PostMapping({"/register"})
+    public User registerNewUser(@RequestBody User user) {
+        User NewUser= userService.registerUser(user);
+        VerificationToken verificationToken = verificationTokenService.createVerificationToken(user); // création du jeton de vérification
+        verificationTokenService.saveVerificationToken(verificationToken);
+        return NewUser;
+    }
+
+
+    @PutMapping("/verify/{verificationToken}")
+    public String activateAccount(@PathVariable String verificationToken) throws javax.mail.MessagingException {
+        User user = userService.VerifyUser(verificationToken);
+        if (user != null) {
+            String to = user.getEmail();
+            String subject = "Account Created";
+            try {
+                emailService.sendEmail(to, subject);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+            return ("Congratulations " + user.getUsername() + " Your account has been activated successfully");
+        } else {
+            return ("there was an error verifying your account, please make sure you have entered the right token and that the token hasn't expried");
+        }
+    }
+
+
+///////Reset Password Sms////////
+    
+    @PostMapping({"/SendSMS/{Phone}"})
+    public User SmsSender(@PathVariable Long Phone) {
+        User NewUser=userService.retrieveUserByPhone(Phone);
+        UserCode userCode = codeService.createVerificationCode(NewUser); // création du jeton de vérification
+        codeService.saveVerificationCode(userCode);
+         NewUser= userService.updateUser(NewUser);
+
+        return NewUser;
+    }
+
+
+
+    @PutMapping("/reset-password/{verificationCode}")
+    public String activateAccount(@PathVariable String verificationCode,@RequestParam String newPassword ,@RequestParam String confirmPassword) throws javax.mail.MessagingException {
+        User user = userService.retrieveByVerificationCode(verificationCode);
+        if (user != null) {
+            user=userService.ResetPasswordSms(verificationCode,newPassword,confirmPassword);
+            String to = user.getEmail();
+            String subject = "  Account Updated";
+            String text = "Congratulations " + user.getUsername() + " Your password account has been updated successfully";
+            try {
+                emailService.SendResetMail(to,subject,text);
+                user.setVerificationCode(null);
+                userService.updateUser(user);
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+            return ("Congratulations " + user.getUsername() + " Your password account has been updated successfully");
+        } else {
+            return ("there was an error verifying your account, please make sure you have entered the right token and that the token hasn't expried");
+        }
+    }
+
+
+
+///// Assign Role To User ////////
+
+    @PutMapping  ({"/addRole/{roleName}/{Username}"})
+      public void addRoleToUser(@PathVariable String roleName,@PathVariable Long idUser) {
+        userService.addRoleToUser(roleName,idUser);
+    }
 
 
 
@@ -56,7 +155,7 @@ public class UserController {
 
 
 
-    @PostMapping("/add-User")
+       @PostMapping("/add-User")
         public User addUser(@RequestBody User u) {
             User  user = userService.addUser(u);
             return user;
@@ -75,6 +174,12 @@ public class UserController {
         }
 }
 
+
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> handleException(Exception e) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+//    }
 
 
 

@@ -20,6 +20,7 @@ public interface IUserService {
 
     public User registerUser(User user);
 
+    User retrieveUserByPhone(Long Phone);
 
 
 
