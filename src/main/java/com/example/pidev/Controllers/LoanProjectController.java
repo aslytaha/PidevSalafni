@@ -1,13 +1,12 @@
 package com.example.pidev.Controllers;
 
-import com.example.pidev.Entities.DetailsLoans;
-import com.example.pidev.Entities.User;
+import com.example.pidev.Entities.*;
 import com.example.pidev.Repositories.LoanProjectRepository;
 import com.example.pidev.Repositories.UserRepository;
+import com.example.pidev.Services.AmotizationService;
 import com.example.pidev.Services.DetailsLoansServiceImpl;
 import com.example.pidev.Services.Iloan;
 import com.example.pidev.Services.LoanProjectServiceImpl;
-import com.example.pidev.Entities.LoanProject;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,17 +27,29 @@ public class LoanProjectController {
 
     @Autowired
     LoanProjectServiceImpl loanProject;
+    @Autowired
     LoanProjectRepository loan;
+    @Autowired
     UserRepository userpo;
+    @Autowired
+    AmotizationService amor;
 
     @GetMapping("/getProjects")
     public List<LoanProject> getProjects() {
         List<LoanProject> loanlist = loanProject.getAllLoanProjects();
         return loanlist;
     }
+    @GetMapping("/getLoanProject/{id}")
+    public LoanProject getLoanProjectById(@PathVariable("id") Long id) {
+        LoanProject loanproject = loanProject.getLoanProjectById(id);
+        List<Amortization> amortizationTable = amor.generateAmortizationT(loanproject.getLoanamount(), loanproject);
+        loanproject.setAmortizationTable(amortizationTable); // set the amortization table in the loan project
+        return loanproject;
+    }
+
 
     @GetMapping("/retrieve/{id}")
-        public LoanProject getLoanProjectById (@PathVariable Long id){
+        public LoanProject getLoanProjectByiddd (@PathVariable Long id){
         return loanProject.getLoanProjectById(id);
         }
 //    @PostMapping("/add-project")
@@ -49,13 +61,45 @@ public class LoanProjectController {
 //    }
 
 
-    @PostMapping("/add-project")
-    public LoanProject add(@RequestBody LoanProject p, Principal principal) {
-        p.setValidate(false); //validate par defaut false dès l'ajout
-        p.setRemainingamount(p.getLoanamount());
-        LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
-        return loan.save(loanproject);
-    }
+//    @PostMapping("/add-project")
+//    public LoanProject add(@RequestBody LoanProject p, Principal principal) {
+//        p.setValidate(false); //validate par defaut false dès l'ajout
+//        p.setRemainingamount(p.getLoanamount());
+//        LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
+//        return loan.save(loanproject);
+//    }
+//@PostMapping("/add-project")
+//public LoanProject add(@RequestBody LoanProject p, Principal principal) {
+//    p.setValidate(false); //validate par defaut false dès l'ajout
+//    p.setRemainingamount(p.getLoanamount());
+//    LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
+//    return loan.save(loanproject);
+//}
+@PostMapping("/add-project")
+public LoanProject add(@RequestBody LoanProject p, Principal principal) {
+    p.setValidate(false); // validate par defaut false dès l'ajout
+    p.setRemainingamount(p.getLoanamount());
+    LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
+
+    // Generate amortization table
+    Float loanAmount = p.getLoanamount();
+    type paymentType = p.getPaymenttype();
+    int numberOfPeriods = paymentType == type.MONTHLY ? 12 : 4;
+
+
+    List<Amortization> amortizationTable = amor.generateAmortizationTable(loanAmount, paymentType,numberOfPeriods);
+
+    // Set the LoanProject object for each Amortization object in the list
+    amortizationTable.forEach(a -> a.setLoanproject(loanproject));
+
+    // Save the amortization table for the loan project
+    amor.saveAll(amortizationTable);
+
+    return loan.save(loanproject);
+}
+
+
+
 
 
 
@@ -102,8 +146,8 @@ public class LoanProjectController {
     }
 
     @PutMapping("/{projectId}/borrow")
-    public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount) {
-        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount);
+    public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount, Principal principal) {
+        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount, principal);
         if (loanproject != null) {
             return ResponseEntity.ok(loanproject);
         } else {
@@ -115,9 +159,12 @@ public class LoanProjectController {
 
 
 
-@ExceptionHandler(Exception.class)
+
+
+
+    @ExceptionHandler(Exception.class)
 public ResponseEntity<?> handleException(Exception e) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("aziza Server Error: " + e.getMessage());
 }
 
 

@@ -4,6 +4,7 @@ package com.example.pidev.Services;
 import com.example.pidev.Entities.DetailsLoans;
 import com.example.pidev.Entities.LoanProject;
 import com.example.pidev.Entities.User;
+import com.example.pidev.Entities.type;
 import com.example.pidev.Repositories.DetailsLoansRepository;
 import com.example.pidev.Repositories.LoanProjectRepository;
 import com.example.pidev.Repositories.UserRepository;
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.security.Principal;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,17 +48,46 @@ public  class LoanProjectServiceImpl implements Iloan {
         return projectRepository.findById(id).get();
     }
 
+//    @Override
+//    public LoanProject createLoanProject(Authentication authentication, LoanProject loanProject) {
+//        User user = userop.findByUsername(authentication.getName());
+//        loanProject.setUser(user);
+//
+//        // set payment type from user input
+//        String paymentTypeStr = loanProject.getPaymenttype().toString().toUpperCase();
+//        type paymentType = type.valueOf(paymentTypeStr);
+//        loanProject.setPaymenttype(paymentType);
+//        return projectRepository.save(loanProject);
+//    }
+
+
     @Override
     public LoanProject createLoanProject(Authentication authentication, LoanProject loanProject) {
         User user = userop.findByUsername(authentication.getName());
         loanProject.setUser(user);
+
+        // set payment type from user input
+        String paymentTypeStr = loanProject.getPaymenttype().toString().toUpperCase();
+        type paymentType = type.valueOf(paymentTypeStr);
+        loanProject.setPaymenttype(paymentType);
+
+        // set refund period based on payment type
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(loanProject.getStartdate());
+
+        if (paymentType == type.MONTHLY) {
+            calendar.add(Calendar.MONTH, 1);
+        } else if (paymentType == type.QUARTERLY) {
+            calendar.add(Calendar.MONTH, 3);
+        }
+
+        loanProject.setRefundperiod(calendar.getTime());
+
         return projectRepository.save(loanProject);
     }
 
-    //    public LoanProject add(LoanProject p) {
-//
-//        return p;
-//    }
+
+
     @Override
     @Transactional
     public LoanProject update(LoanProject p) {
@@ -123,20 +157,10 @@ public void deleteProjectAndDetails(Long Idprojet) {
 //        return loanProject;
 //    }
 @Override
-public LoanProject addDetailsLoan(LoanProject loanProject, DetailsLoans detailsLoans) {
-    loanProject.setRemainingamount(loanProject.getLoanamount());
-    detailsLoans.setLoanProject(loanProject);
-    loanProject.setDetailsLoans(detailsLoans);
-    projectRepository.save(loanProject);
-    detail.save(detailsLoans);
-    return loanProject;
-}
-
-    @Override
-    public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed) {
-        // Récupération du projet de prêt à partir de l'ID
-        LoanProject loanP = projectRepository.findById(Idprojet).get();
-        Float remainingamount=loanP.getRemainingamount();
+public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed, Principal principal) {
+    // Récupération du projet de prêt à partir de l'ID
+    LoanProject loanP = projectRepository.findById(Idprojet).orElse(null);
+    Float remainingamount=loanP.getRemainingamount();
 
         if (loanP != null) {
             // Mise à jour du montant total du prêt en soustrayant le montant emprunté
@@ -144,24 +168,24 @@ public LoanProject addDetailsLoan(LoanProject loanProject, DetailsLoans detailsL
             // Création d'une nouvelle entité DetailsLoans
             DetailsLoans newDetailsLoan = new DetailsLoans();
             newDetailsLoan.setAmountborrowed(amountborrowed);
-            newDetailsLoan.setLoanProject(loanP);
 
+        // Enregistrement du nouveau DetailsLoans dans la base de données
+        detail.save(newDetailsLoan);
 
-            // Enregistrement du nouveau DetailsLoans dans la base de données
-            detail.save(newDetailsLoan);
+        // Mise à jour de l'entité du projet de prêt avec le nouveau DetailsLoans
+        loanP.setDetailsLoans(newDetailsLoan);
 
-            // Mise à jour de l'entité du projet de prêt avec le nouveau DetailsLoans
-            loanP.setDetailsLoans(newDetailsLoan);
+        // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
+        loanP.setRemainingamount(remainingamount);
 
-            // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
-            loanP.setRemainingamount(remainingamount);
-
-            // Enregistrement des changements dans la base de données
-            projectRepository.save(loanP);
-        }
-
-        return loanP;
+        // Enregistrement des changements dans la base de données
+        projectRepository.save(loanP);
     }
+
+    return loanP;
+}
+
+
 
 
 

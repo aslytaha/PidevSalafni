@@ -1,4 +1,5 @@
 package com.example.pidev.Entities;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class DetailsLoans  implements Serializable  {
     @Enumerated(EnumType.STRING)
     private status Status;
 
+    @JsonBackReference
     @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)
     private LoanProject loanProject;
 
