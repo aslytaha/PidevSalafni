@@ -19,6 +19,7 @@ public class AssuranceController {
     LoanProjectServiceImpl loanProjectService;
     @PostMapping("/add")
     public Assurance addassurance(@RequestBody Assurance as){
+
         return assuranceService.addAssurance(as);
     }
     @PutMapping("/update")

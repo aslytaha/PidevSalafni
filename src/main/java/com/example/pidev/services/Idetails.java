@@ -10,6 +10,7 @@ public interface Idetails {
     List<DetailsLoans> getAllDetails();
     DetailsLoans getDetailsLoansById(Integer id);
  //   DetailsLoans updateD(DetailsLoans p);
-   // DetailsLoans addD(DetailsLoans de);
+    DetailsLoans add(DetailsLoans de);
+   // String findProjectNameByNumDetails(Long numDetails);
 
 }

@@ -1,15 +1,20 @@
 package com.example.pidev.controllers;
 
-import com.example.pidev.Entities.Assurance;
 import com.example.pidev.Entities.ImpayedLoans;
-import com.example.pidev.services.AssuranceService;
-import com.example.pidev.services.IImpayedLoansService;
 import com.example.pidev.services.ImpayedLoansService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RestController
+@AllArgsConstructor
+@RequestMapping("/ImpayedLoans")
 public class ImpayedLoansController {
+   @Autowired
     ImpayedLoansService impayedLoansService;
     @PostMapping("/add")
     public ImpayedLoans addImpayedLoans(@RequestBody ImpayedLoans il){
@@ -27,8 +32,18 @@ public class ImpayedLoansController {
     public List<ImpayedLoans> getAllImpayedLoans(){
         return impayedLoansService.getAllImpayedLoans();
     }
-    @GetMapping("/getByID/{id}")
-    public ImpayedLoans getByImpayedLoans(@PathVariable("id") Integer ilID){
-        return impayedLoansService.getImpayedLoansById(ilID);
+    @PostMapping("/transfer-Impayed")
+    public ResponseEntity<String> transferImpayedTransactions() {
+        try {
+            impayedLoansService.transferImpayedLoans();
+            return ResponseEntity.ok("Unpaid transactions transferred to ImpayedLoans successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to transfer unpaid transactions to ImpayedLoans: " + e.getMessage());
+        }
+    }
+    @GetMapping("/SendMailWithNewTransaction")
+    public void ImpayedLoans(){
+        impayedLoansService.SendMailToLateUser();
     }
 }

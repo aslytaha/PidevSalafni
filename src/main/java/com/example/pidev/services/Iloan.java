@@ -23,7 +23,8 @@ public interface Iloan {
     LoanProject update(LoanProject p);
 
     void delete(Long Idprojet);
-  //  LoanProject createLoanProject(Authentication authentication, LoanProject loanProject);
+
+    //  LoanProject createLoanProject(Authentication authentication, LoanProject loanProject);
    // LoanProject addDetailsLoan(LoanProject loanProject, DetailsLoans detailsLoans);
  //   LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed);
 

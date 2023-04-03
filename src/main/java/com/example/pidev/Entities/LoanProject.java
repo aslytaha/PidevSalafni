@@ -2,6 +2,7 @@ package com.example.pidev.Entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,21 +37,24 @@ public class LoanProject implements Serializable {
     private Date finishdate;
     private Integer refundperiod;
     private String owner;
-    @Enumerated(EnumType.STRING)
-    private actarea activityarea;
     private Boolean validate;
+    private String email;
 
     @ManyToOne
     Assurance Assurances;
 
-    @OneToOne(mappedBy="loanProject", cascade = CascadeType.REMOVE)
+    @OneToOne
     private DetailsLoans detailsLoans;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iduser")
     private User user;
+
     @ManyToOne
     ClientAccount clientaccount;
+    //fetch = FetchType.LAZY,mappedBy = "loanproject"
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "loanproject")
+    private Set<Amortization> Amortizations;
 
 }

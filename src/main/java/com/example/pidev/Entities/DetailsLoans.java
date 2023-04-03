@@ -7,8 +7,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
-
 
 
 @Entity
@@ -26,6 +24,8 @@ public class DetailsLoans  implements Serializable  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="IdDetails")
     private Integer idDetails;
+ //   private Long Idprojet;
+
     private float amountborrowed;
     private Date LoanDate;
     private Date RefundDate;
@@ -33,11 +33,10 @@ public class DetailsLoans  implements Serializable  {
     private Integer nbborrowers;
     private String BorrowedName;
     @Enumerated(EnumType.STRING)
-    private status Status;
+    private com.example.pidev.Entities.Status Status;
+
 
 
     @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)
     private LoanProject loanProject;
-
-
 }

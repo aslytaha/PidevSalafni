@@ -22,8 +22,10 @@ public class ImpayedLoans {
     @Column(name="ID")
     private Integer ID ; // clé primaire
     private Integer numTrans;
-    private Integer AmountNotPayed;
-    private Integer NewAmountToPay;
+    private Long iProjet;
+    private float AmountNotPayed;
+    private float NewAmountToPay;
     private Date NewPaymentDate;
-    private Number InterestRates;
+    private Integer InterestRate;
+    //private String email;
 }

@@ -8,7 +8,12 @@ import java.util.List;
 public interface IImpayedLoansService {
     public ImpayedLoans addImpayedLoans(ImpayedLoans il);
     public ImpayedLoans updateImpayedLoans(ImpayedLoans il);
-    public List<ImpayedLoans> getAllImpayedLoans();
-    public ImpayedLoans getImpayedLoansById(Integer ilID);
+
+    List<ImpayedLoans> getAllImpayedLoans();
+
+    //   Long getImpayedLoanCountForProject(Long Idprojet);
     public void deleteImpayedLoans(Integer ilID);
+
+    void SendMailToLateUser();
+    void transferImpayedLoans();
 }

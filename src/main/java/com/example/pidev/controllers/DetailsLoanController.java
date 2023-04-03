@@ -1,9 +1,12 @@
 package com.example.pidev.controllers;
 
 
+import com.example.pidev.Entities.Assurance;
 import com.example.pidev.Entities.DetailsLoans;
 import com.example.pidev.services.DetailsLoansServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.List;
 public class DetailsLoanController {
 
     DetailsLoansServiceImpl details;
+
 
     @GetMapping("/getdetail/idproj")
     public List<DetailsLoans> getProjects() {
@@ -33,4 +37,9 @@ public class DetailsLoanController {
     //public DetailsLoans retrievedetail(@PathVariable("DetailsLoans-details-id") Integer idDetails) {
       //  return details.getDetailsLoansById(idDetails);
     //}
+
+    @PostMapping("/add")
+    public DetailsLoans add(@RequestBody DetailsLoans de){
+        return details.add(de);
+    }
 }

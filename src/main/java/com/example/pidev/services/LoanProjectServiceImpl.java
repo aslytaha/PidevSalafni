@@ -2,9 +2,7 @@ package com.example.pidev.services;
 
 
 import com.example.pidev.Entities.Assurance;
-import com.example.pidev.Entities.DetailsLoans;
 import com.example.pidev.Entities.LoanProject;
-import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.AssuranceRepository;
 import com.example.pidev.Repositories.DetailsLoansRepository;
 import com.example.pidev.Repositories.LoanProjectRepository;
@@ -12,15 +10,10 @@ import com.example.pidev.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
