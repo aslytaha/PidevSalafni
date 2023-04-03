@@ -18,18 +18,16 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(Email email) throws MessagingException {
+    public void sendEmail(String to,String Subject ,String text) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setTo(email.getTo());
-        helper.setSubject(email.getSubject());
-        helper.setText(email.getBody());
-
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+        helper.setTo(to);
+        helper.setSubject(Subject);
+        helper.setText(text, true);
         mailSender.send(message);
     }
-}
 
+}
 
 
 

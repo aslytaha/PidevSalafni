@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,6 +41,8 @@ public class User implements Serializable  {
     private Long CIN;
 
 
+
+
     @ManyToMany(cascade = CascadeType.ALL ,fetch = FetchType.EAGER )
     @JoinTable(
             name = "Users_Role",
@@ -54,7 +57,8 @@ public class User implements Serializable  {
     @OneToOne
     private ClientAccount clientaccount;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<LoanProject> loanProjects;
 
 

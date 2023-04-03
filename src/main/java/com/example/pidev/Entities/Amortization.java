@@ -46,11 +46,11 @@ public class Amortization implements Serializable {
     private float remainingAmount;
 
     @Enumerated(EnumType.STRING)
-    private float status;
+    private status status;
 
 
 
-    
+
     @ManyToOne
     private LoanProject loanproject;
 }

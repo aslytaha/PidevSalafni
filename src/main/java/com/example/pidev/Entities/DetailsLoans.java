@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "details_loans")
-public class DetailsLoans  implements Serializable  {
+public class DetailsLoans  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,16 +26,22 @@ public class DetailsLoans  implements Serializable  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDetails;
     private Float amountborrowed;
-    private Date LoanDate;
+
+    @Temporal(TemporalType.TIMESTAMP)//L'annotation @Temporal est utilisée pour spécifier que l'attribut loandate sera stocké dans la base de données en tant que type de date SQL. L'argument TemporalType.TIMESTAMP précise que la date et l'heure doivent être stockées.
+    private Date loanDate;
     private Date RefundDate;
     private Float RefundAmount;
 
     private String BorrowedName;
 
 
-
     @JsonBackReference
-    @OneToOne(mappedBy="detailsLoans", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "detailsLoans", cascade = CascadeType.REMOVE)
     private LoanProject loanProject;
 
+    @PrePersist
+    public void setLoanDate() {
+        this.loanDate = new Date();  //permet de modifier la date de création si nécessaire.
+
+    }
 }

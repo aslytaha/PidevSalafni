@@ -59,4 +59,5 @@ public class LoanProject implements Serializable {
     private List<Amortization> amortizationTable;
 
 
+
 }

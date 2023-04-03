@@ -1,6 +1,7 @@
 package com.example.pidev.Repositories;
 
 import com.example.pidev.Entities.LoanProject;
+import com.example.pidev.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,7 @@ public interface LoanProjectRepository extends JpaRepository <LoanProject,Long> 
 
 //    @Query("SELECT l FROM LoanProject l WHERE DetailsLoans.Id= :idprojet")
 //    LoanProject getDetailByproject(@Param("idprojet") Long idprojet);
-
+    @Query("SELECT u FROM User u ,LoanProject l WHERE u.idUser= : idUser")
+    User getUserbyLoan(@Param("idUser") Long idUser);
 
 }

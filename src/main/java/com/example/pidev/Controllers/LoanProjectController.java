@@ -3,7 +3,10 @@ package com.example.pidev.Controllers;
 import com.example.pidev.Entities.*;
 import com.example.pidev.Repositories.LoanProjectRepository;
 import com.example.pidev.Repositories.UserRepository;
-import com.example.pidev.Services.*;
+import com.example.pidev.Services.AmotizationService;
+import com.example.pidev.Services.DetailsLoansServiceImpl;
+import com.example.pidev.Services.Iloan;
+import com.example.pidev.Services.LoanProjectServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -32,8 +34,6 @@ public class LoanProjectController {
     UserRepository userpo;
     @Autowired
     AmotizationService amor;
-    @Autowired
-    EmailService emailService;
 
     @GetMapping("/getProjects")
     public List<LoanProject> getProjects() {
@@ -76,8 +76,10 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
     p.setRemainingamount(p.getLoanamount());
     LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
 
-
-
+    // Validate the loan project
+    if (loanProject.isLoanProjectValid(loanproject)) {
+        loanproject.setValidate(true);
+    }
 
     List<Amortization> amortizationTable = amor.generateAmortizationTable(loanproject);
 
@@ -142,19 +144,6 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
     public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount, Principal principal) {
         LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount,principal);
         if (loanproject != null) {
-            // Send an email notification to the loan project creator
-            String subject = "Loan project updated";
-            String body = "Dear " + loanproject.getUser().getEmail() + ",\n\n"
-                    + "The loan project '" + loanproject.getProjectname() + "' has been updated with a new amount borrowed of " + amount + " by " + principal.getName() + ".\n\n"
-                    + "Best regards,\n"
-                    + "The Loan System Team";
-            Email email = new Email(subject, body,loanproject.getOwner().getEmail());
-            try {
-                emailService.sendEmail(email);
-            } catch (MessagingException e) {
-                // Handle the exception appropriately
-                e.printStackTrace();
-            }
             return ResponseEntity.ok(loanproject);
         } else {
             return ResponseEntity.notFound().build();
@@ -168,10 +157,10 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
 
 
 
-    @ExceptionHandler(Exception.class)
-public ResponseEntity<?> handleException(Exception e) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("aziza Server Error: " + e.getMessage());
-}
+//    @ExceptionHandler(Exception.class)
+//public ResponseEntity<?> handleException(Exception e) {
+//    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("aziza Server Error: " + e.getMessage());
+//}
 
 
 
