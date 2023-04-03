@@ -9,5 +9,5 @@ public interface IClientAccount {
     void deleteClientAccount(Integer idClient);
     List<ClientAccount> getAllClientAccount();
     ClientAccount getClientAccountById(Integer idClient);
-    List<ClientAccount> selectAll();
+
 }

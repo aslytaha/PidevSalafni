@@ -1,17 +1,23 @@
 package com.example.pidev.Service.Classes;
+import com.example.pidev.Entities.User;
+import com.example.pidev.Repositories.UserRepository;
 import com.example.pidev.Service.Interface.IClientAccount;
 import com.example.pidev.Repository.ClientAccountRepository;
 import com.example.pidev.Entities.ClientAccount;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@AllArgsConstructor
 @Service
-
-
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientAccountService implements IClientAccount {
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
     private ClientAccountRepository clientaccountRepository;
 
 
@@ -25,14 +31,16 @@ public class ClientAccountService implements IClientAccount {
     }
     @Override
     public List<ClientAccount> getAllClientAccount() {
-        return (List<ClientAccount>) clientaccountRepository.findAll();
+
+        return clientaccountRepository.findAll();
     }
     @Override
     public ClientAccount getClientAccountById(Integer IDClient) {
         return clientaccountRepository.findById(IDClient).get();
     }
-    @Override
-    public List<ClientAccount> selectAll() {
-        return clientaccountRepository.findAll();
+
+
+    public User getUserbyClientAccount(Integer IDClient) {
+        return userRepository.findUserByClientaccount(IDClient) ;
     }
 }

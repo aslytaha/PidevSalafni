@@ -1,12 +1,19 @@
 package com.example.pidev.Entities;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@ToString
 @Table( name = "Users")
 public class User implements Serializable {
 
@@ -28,12 +35,13 @@ public class User implements Serializable {
     private Long Phone;
     private Long CIN;
     private String Role;
+    private Integer age ;
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
     private Set<Profile> Profiles;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ClientAccount clientaccount;
 
     // constructeurs, getters et setters

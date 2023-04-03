@@ -6,10 +6,13 @@ import java.util.List;
 
 
 public interface ITransaction {
-    void depot(Integer IDClient, float Amount)throws Exception;
-    void retrait(Integer IDClient, float Amount)throws Exception;
 
-    int addTransaction(Transaction s);
+    List<Transaction> findAllTransaction();
 
-    String approveTransaction(Transaction s) throws MessagingException;
+    Transaction findTransactionById(Integer IDtransaction);
+
+    void deleteTransactionById(Integer IDtransaction);
+     void depot(Integer compteDestinataire, float montant, String type_transaction) throws Exception;
+
+
 }
