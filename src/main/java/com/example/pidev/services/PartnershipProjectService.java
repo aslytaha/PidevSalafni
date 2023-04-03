@@ -1,19 +1,19 @@
 package com.example.pidev.services;
 
-import com.example.pidev.Entities.*;
+import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Entities.RequestPartnership;
+import com.example.pidev.Entities.Statu;
+import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
 import com.example.pidev.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +29,8 @@ public class PartnershipProjectService implements IPartnershipProject{
     UserRepository userRepository;
      @Autowired
     private EmailService emailService;
+     @Autowired
+     SMSClient smsClient;
 
     @Override
     public List<PartnershipProject> retrieveAllPartnershipProjects() {
@@ -121,6 +123,8 @@ public class PartnershipProjectService implements IPartnershipProject{
             sendEmailToClient(projectId, "Votre projet a été validé.","hhhhh");
             notifyUsersOfNewProjects(project,"fidele Salafni","psssst nouveau projet" + project.getProjectName() + project.getShareofProject() +project.getDescriptionProject()+"ne ratez pas cette chance");
         }
+        Long user = project.getUser().getPhone();
+        smsClient.SendSMS(user.toString());
 
         partnershipProjectRepository.save(project);
     }

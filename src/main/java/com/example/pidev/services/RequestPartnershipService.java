@@ -8,20 +8,21 @@ import com.example.pidev.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@Lazy
 public class RequestPartnershipService implements IRequestPartnership{
     @Autowired
     RequestPartnershipRepository requestPartnershipRepository;
@@ -37,8 +38,8 @@ public class RequestPartnershipService implements IRequestPartnership{
     public List<RequestPartnership> retrieveAllRequestPartnership() {
         return requestPartnershipRepository.findAll();
     }
-
-
+@Autowired
+SMSClient smsClient;
     @Override
     public RequestPartnership retrieveRequestPartnership(Long idRequest) {
         return requestPartnershipRepository.findById(idRequest).get();
@@ -68,12 +69,11 @@ public class RequestPartnershipService implements IRequestPartnership{
             requestPartnershipRepository.save(request);
             System.out.println("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
 
-            //sendEmailToClients(request, "Votre demande a été validé. passe au paiment","demande de partenariat");
-
         }
+        //MAIL
         sendEmailToClients(request, "Votre demande a été validé. passe au paiment","demande de partenariat");
-
-
+        //SMS
+         smsClient.SendSMSs(project.getUser().getPhone().toString());
         return request;
     }
 

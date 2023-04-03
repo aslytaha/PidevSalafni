@@ -3,10 +3,8 @@ package com.example.pidev.controllers;
 
 import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
-import com.example.pidev.services.IPartnershipProject;
 import com.example.pidev.services.PartnershipProjectService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,8 +78,8 @@ public class PartnershipProjectController {
     public Optional<PartnershipProject> updateProjectStatus(@PathVariable Long projectId) {
 
             partnershipProject.validerProject(projectId);
-        Optional<PartnershipProject> p=partnershipProjectRepository.findById(projectId);
-            return p;
+        Optional<PartnershipProject> project=partnershipProjectRepository.findById(projectId);
+            return project;
 
     }
 
