@@ -1,12 +1,23 @@
 package com.example.pidev.Entities;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table (name = "bank_account")
-public class BankAccount {
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class BankAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="IDbank")
