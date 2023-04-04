@@ -49,16 +49,6 @@ public class TransactionController {
         }
     }
 
-//    @PostMapping("/validate")
-//    public ResponseEntity<?> validerTransaction(@RequestBody ValidationRequest validationRequest) {
-//        try {
-//            transactionService.validerTransaction(validationRequest.getTransactionId(), validationRequest.getValidationCode());
-//            return ResponseEntity.ok("Transaction validated successfully.");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-
     @PostMapping("/withdraw")
     public ResponseEntity<?> retrait(@RequestBody WithdrawRequest withdrawRequest ) {
         try {

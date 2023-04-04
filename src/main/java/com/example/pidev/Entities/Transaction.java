@@ -25,7 +25,7 @@ public class Transaction implements Serializable {
     private Integer IDtransaction; // clé primaire
     private String clientName;
     private Float Amount;
-    private LocalDateTime date;
+    private Date date;
     private String Transaction_type;
     private Long ribsource;
     private Long ribrecipient ;

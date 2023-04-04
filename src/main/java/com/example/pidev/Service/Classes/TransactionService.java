@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +57,7 @@ SMSService smsService;
         clientAccountRepository.save(compteEmetteur);
 
 
+
         float soldeDest = compteDestinataire.getSolde() + montant;
         compteDestinataire.setSolde(soldeDest);
         clientAccountRepository.save(compteDestinataire);
@@ -64,7 +67,9 @@ SMSService smsService;
         transactionSrc.setCompteEmetteur(compteEmetteur);
         transactionSrc.setCompteDestinataire(compteDestinataire);
         transactionSrc.setAmount(montant);
-        transactionSrc.setDate(LocalDateTime.now());
+        LocalDate now=LocalDate.now();
+        Date daten= java.sql.Date.valueOf(now);
+        transactionSrc.setDate(daten);
         transactionSrc.setType_transaction(type_transaction);
         transactionSrc.setEtat(TransactionState.PENDING);
         transactionRepository.save(transactionSrc);
@@ -83,13 +88,14 @@ SMSService smsService;
         Transaction transaction = new Transaction();
         transaction.setCompteDestinataire(clientAccount);
         transaction.setAmount(montant);
-        transaction.setDate(LocalDateTime.now());
+        LocalDate now=LocalDate.now();
+        Date daten= java.sql.Date.valueOf(now);
+        transaction.setDate(daten);
         transaction.setType_transaction(type_transaction);
         transaction.setEtat(TransactionState.PENDING);
-
         transactionRepository.save(transaction);
-        User user =userRepository.findUserByClientaccount(compteDestinataire);
 
+        User user =userRepository.findUserByClientaccount(compteDestinataire);
         smsService.sendSMS(String.valueOf(user.getPhone()));
 
     }
@@ -110,10 +116,14 @@ SMSService smsService;
         Transaction transaction = new Transaction();
         transaction.setCompteEmetteur(clientAccount);
         transaction.setAmount(-montant);
-        transaction.setDate(LocalDateTime.now());
+        LocalDate now=LocalDate.now();
+        Date daten= java.sql.Date.valueOf(now);
+        transaction.setDate(daten);
         transaction.setType_transaction(type_transaction);
         transaction.setEtat(TransactionState.PENDING);
         transactionRepository.save(transaction);
+        User user =userRepository.findUserByClientaccount(compteDestinataire);
+        smsService.sendSMS(String.valueOf(user.getPhone()));
     }
 
 

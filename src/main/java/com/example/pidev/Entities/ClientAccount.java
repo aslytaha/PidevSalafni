@@ -25,10 +25,10 @@ public class ClientAccount implements Serializable {
     private Boolean Subscription ;
     private String ExpirationDate ;
     private  Long rib;
-   // @JsonBackReference
+    @JsonBackReference
     @OneToMany(mappedBy = "compteEmetteur")
     Set<Transaction> transactionSet;
- //   @JsonBackReference
+    @JsonBackReference
     @OneToMany(mappedBy = "compteDestinataire")
     Set<Transaction> transactionS;
 
