@@ -12,6 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface AmortizationRepository extends JpaRepository<Amortization,Long> {
-   // @Query("SELECT a FROM Amortization a WHERE a.status = 'NOTPAYED' AND a.paymentDate < :now")
+    // @Query("SELECT a FROM Amortization a WHERE a.status = 'NOTPAYED' AND a.paymentDate < :now")
     //List<Amortization> findImpayedLoans(@Param("now") LocalDate now);
 }

@@ -17,5 +17,7 @@ public interface ImpayedLoansRepository extends JpaRepository<ImpayedLoans,Integ
     long countByIProjet(@Param("iProjet") Long iProjet);
 
 
+    List<ImpayedLoans> findByiProjet(Long projectId);
 
+    List<ImpayedLoans> findByNumTrans(Integer numtrans);
 }

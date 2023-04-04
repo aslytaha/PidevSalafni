@@ -27,5 +27,5 @@ public class ImpayedLoans {
     private float NewAmountToPay;
     private Date NewPaymentDate;
     private Integer InterestRate;
-    //private String email;
+    private String email;
 }
