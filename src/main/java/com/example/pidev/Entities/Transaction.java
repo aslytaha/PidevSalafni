@@ -26,11 +26,8 @@ public class Transaction implements Serializable {
     private String clientName;
     private Float Amount;
     private Date date;
-    private String Transaction_type;
-    private Long ribsource;
-    private Long ribrecipient ;
     private String type_transaction ;
-    private String validationCode;
+
 
 
 
