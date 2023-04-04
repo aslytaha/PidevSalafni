@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -90,42 +91,37 @@ public  class LoanProjectServiceImpl implements Iloan {
          return project;
     }
 
-//    @Override
-//    public Map<Long, List<User>> getAllBorrowers() {
-  //      List<LoanProject> projects = projectRepository.findAll();
-//
-  //      Map<Long, List<User>> borrowerMap = new HashMap<>();
-//
-    //    for (LoanProject project : projects) {
-      //      List<LoanProject> loans = project.getDetailsLoans();
-//
-  //          List<User> borrowers = new ArrayList<>();
+    @Override
+    public List<String> getAllBorrowers() {
+        List<LoanProject> projectss = projectRepository.findAll();
 
-    //        for (LoanProject loan : loans) {
-      //          User borrower = loan.getBorrower();
-        //        borrowers.add(borrower);
- //           }
+        //  Map<Long, List<User>> borrowerMap = new HashMap<>();
 
-//            borrowerMap.put(project.getIdprojet(), borrowers);
-  //      }
+        List<String> borrowers = null;
+        for (LoanProject project : projectss) {
+            String borrower = project.getDetailsLoans().getBorrowedName();
 
-//        return borrowerMap;
-  //  }
+            borrowers = new ArrayList<>();
+            borrowers.add(borrower);
 
-  //  public List<String> getAllProjectOwners() {
-    //    List<LoanProject> projects = projectRepository.findAll();
-//
-  //      List<String> projectOwners = new ArrayList<>();
-//
-  //      for (LoanProject project : projects) {
-//
-  //          String projectOwner = project.getOwner();
-    //        projectOwners.add(projectOwner);
-//
-  //      }
-//
-  //      return projectOwners;
-    //}
+
+        }
+        return borrowers;
+    }
+    public List<String> getAllProjectOwners() {
+        List<LoanProject> projects = projectRepository.findAll();
+
+        List<String> projectOwners = new ArrayList<>();
+
+        for (LoanProject project : projects) {
+
+            String projectOwner = project.getOwner();
+            projectOwners.add(projectOwner);
+
+        }
+
+        return projectOwners;
+    }
 
     //
     //@Transactional

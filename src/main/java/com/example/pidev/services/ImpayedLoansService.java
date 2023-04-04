@@ -11,6 +11,7 @@ import com.example.pidev.Repositories.LoanProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.convert.Jsr310Converters;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -74,7 +75,8 @@ public class ImpayedLoansService implements IImpayedLoansService {
             //    throw new RuntimeException(e);
        //     }
      //   }
-           public void SendMailToLateUser () {
+    //   @Scheduled(cron = "0 0 18 * * *")
+    public void SendMailToLateUser () {
                List<ImpayedLoans> impayedLoans = impayedLoansRepository.findAll();
 
                for (ImpayedLoans impayedLoan : impayedLoans) {
@@ -152,7 +154,7 @@ public class ImpayedLoansService implements IImpayedLoansService {
                }
            }
 
-
+        //   @Scheduled(cron = "0 0 18 * * *")
     @Override
     public void transferImpayedLoans() {
         LocalDate now= LocalDate.now();

@@ -33,7 +33,9 @@ public interface Iloan {
 
 
     LoanProject addAssuranceToProjectByName(Long Idprojet, String assurancename);
- //   Map<Long, List<User>> getAllBorrowers();
+
+    List<String> getAllBorrowers();
+    //   Map<Long, List<User>> getAllBorrowers();
    // List<String> getAllProjectOwners();
 
 //    int countborrowerByProject(Float amountborrowed);

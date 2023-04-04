@@ -63,16 +63,16 @@ public class LoanProjectController {
         LoanProject loanP=loanProject.addAssuranceToProjectByName(Idprojet, assurancename);
         return loanP;
     }
-  //  @GetMapping("/projects/all-owners")
-   // public List<String> getAllProjectOwners() {
-    ///    List<String> projectOwners = loanProject.getAllProjectOwners();
-      //  return projectOwners;
-    //}
-//    @GetMapping("/projects/all-borrowers")
-  //  public Map<Long, List<User>> getAllBorrowers() {
-    //    Map<Long, List<User>> borrowerMap = loanProject.getAllBorrowers();
-      //  return borrowerMap;
-    //}
+    @GetMapping("/projects/all-owners")
+    public List<String> getAllProjectOwners() {
+        List<String> projectOwners = loanProject.getAllProjectOwners();
+        return projectOwners;
+    }
+    @GetMapping("/projects/all-borrowers")
+    public List<String> getAllBorrowers() {
+        List<String> borrowerMap = loanProject.getAllBorrowers();
+        return borrowerMap;
+    }
 
 
 

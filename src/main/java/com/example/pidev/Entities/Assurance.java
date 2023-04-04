@@ -1,5 +1,6 @@
 package com.example.pidev.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.Set;
         private String adress;
         private String mail;
         private Long phone;
-
+    @JsonBackReference
         @OneToMany(mappedBy = "Assurances", cascade = CascadeType.ALL)
         private Set<LoanProject> loanProjects;
 
