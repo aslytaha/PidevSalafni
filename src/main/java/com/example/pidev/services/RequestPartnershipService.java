@@ -1,14 +1,10 @@
 package com.example.pidev.services;
 
 import com.example.pidev.Entities.*;
-import com.example.pidev.Repositories.ClientAccountRepository;
-import com.example.pidev.Repositories.PartnershipProjectRepository;
-import com.example.pidev.Repositories.RequestPartnershipRepository;
-import com.example.pidev.Repositories.UserRepository;
+import com.example.pidev.Repositories.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
-@Lazy
 public class RequestPartnershipService implements IRequestPartnership{
     @Autowired
     RequestPartnershipRepository requestPartnershipRepository;
@@ -34,6 +29,9 @@ public class RequestPartnershipService implements IRequestPartnership{
     private EmailService emailService;
     @Autowired
     ClientAccountRepository clientAccountRepository;
+
+    @Autowired
+    BankAccountRepository bankAccountRepository;
     @Override
     public List<RequestPartnership> retrieveAllRequestPartnership() {
         return requestPartnershipRepository.findAll();
@@ -57,9 +55,7 @@ SMSClient smsClient;
             request.setPartnershipProjects(project);
             // ajouter la demande de partenariat au projet
             project.getRequestPartnerships().add(request);
-            //Màj de amountRequested
-            Long amountRequested = project.getAmountRequested() - request.getAmountPayed();
-            project.setAmountRequested(amountRequested);
+
 
             float winPercentage = ((float) request.getAmountPayed() / (float) project.getAmountTotal()) * 100;
             request.setWinPercentage(winPercentage);
@@ -68,12 +64,12 @@ SMSClient smsClient;
             partnershipProjectRepository.save(project);
             requestPartnershipRepository.save(request);
             System.out.println("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
-
+            //smsClient.SendSMSs(project.getUser().getPhone().toString());
         }
         //MAIL
-        sendEmailToClients(request, "Votre demande a été validé. passe au paiment","demande de partenariat");
+        sendEmailToClients(request, "Votre demande a été enregistre avec succes. passe au paiment _\n voici notre RIB bancaire : 123456","demande de partenariat");
         //SMS
-         smsClient.SendSMSs(project.getUser().getPhone().toString());
+        // smsClient.SendSMSs(project.getUser().getPhone().toString());
         return request;
     }
 
@@ -153,7 +149,33 @@ SMSClient smsClient;
 
 
 
+   public PartnershipProject payement (Long idRequest , Long RIB)
+   {
 
+       BankAccount account = bankAccountRepository.findBankAccountByRIB(RIB);
+       RequestPartnership request = requestPartnershipRepository.findById(idRequest).get();
+       PartnershipProject project=request.getPartnershipProjects();
+
+       ClientAccount clientAccount= request.getClientaccount();
+      float montant= request.getAmountPayed();
+      float m= clientAccount.getSolde() - montant;
+      if (m>=0 && request.getAmountPayed() <= project.getAmountRequested() && project.getStatu().equals(Statu.accepté) ) {
+          clientAccount.setSolde((int) m);
+          clientAccountRepository.save(clientAccount);
+          float c = account.getSolde() + montant;
+          account.setSolde(c);
+          bankAccountRepository.save(account);
+          request.setStatu(Statu.payed);
+
+          Long amountRequested = project.getAmountRequested() - request.getAmountPayed();
+          project.setAmountRequested(amountRequested);
+          partnershipProjectRepository.save(project);
+          sendEmailToClients(request, "Votre demande a été validé. paiement avec succee","demande de partenariat");
+          smsClient.SendSMSs(project.getUser().getPhone().toString());
+      }
+
+       return project;
+   }
 
 
 

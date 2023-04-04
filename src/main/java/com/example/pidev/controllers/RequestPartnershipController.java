@@ -5,8 +5,6 @@ import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.Repositories.RequestPartnershipRepository;
-import com.example.pidev.services.IPartnershipProject;
-import com.example.pidev.services.IRequestPartnership;
 import com.example.pidev.services.PartnershipProjectService;
 import com.example.pidev.services.RequestPartnershipService;
 import lombok.AllArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -46,6 +43,14 @@ public class RequestPartnershipController {
     public RequestPartnership retrieveRequest(@PathVariable("request-id") Long requestId) {
         return requestPartnershipService.retrieveRequestPartnership(requestId);
     }
+
+    @PutMapping("/payement-request/{request-id}/{RIB}")
+    public PartnershipProject payRequest(@PathVariable("request-id") Long requestId ,@PathVariable ("RIB") Long RIB) {
+        PartnershipProject request = requestPartnershipService.payement(requestId,RIB);
+        return request;
+    }
+
+
 
 
     @PostMapping("/projects/{projectId}/requests")

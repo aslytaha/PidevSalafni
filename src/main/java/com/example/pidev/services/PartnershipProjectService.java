@@ -1,36 +1,39 @@
 package com.example.pidev.services;
 
-import com.example.pidev.Entities.PartnershipProject;
-import com.example.pidev.Entities.RequestPartnership;
-import com.example.pidev.Entities.Statu;
-import com.example.pidev.Entities.User;
-import com.example.pidev.Repositories.PartnershipProjectRepository;
-import com.example.pidev.Repositories.RequestPartnershipRepository;
-import com.example.pidev.Repositories.UserRepository;
+import com.example.pidev.Entities.*;
+import com.example.pidev.Repositories.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
-public class PartnershipProjectService implements IPartnershipProject{
-     @Autowired
+public class PartnershipProjectService implements IPartnershipProject {
+    @Autowired
     PartnershipProjectRepository partnershipProjectRepository;
-      @Autowired
-     RequestPartnershipRepository requestPartnershipRepository;
-      @Autowired
-      RequestPartnershipService requestPartnershipService;
-      @Autowired
+    @Autowired
+    RequestPartnershipRepository requestPartnershipRepository;
+    @Autowired
+    RequestPartnershipService requestPartnershipService;
+    @Autowired
+    ClientAccountRepository clientAccountRepository;
+    @Autowired
     UserRepository userRepository;
-     @Autowired
+    @Autowired
     private EmailService emailService;
-     @Autowired
-     SMSClient smsClient;
+    @Autowired
+    SMSClient smsClient;
+
+    @Autowired
+    BankAccountRepository bankAccountRepository;
 
     @Override
     public List<PartnershipProject> retrieveAllPartnershipProjects() {
@@ -39,7 +42,7 @@ public class PartnershipProjectService implements IPartnershipProject{
 
     @Override
     public List<PartnershipProject> retrieveAllPartnershipProjectsByUser(Long iduser) {
-        return partnershipProjectRepository.findPartnershipProjectByUserId (iduser);
+        return partnershipProjectRepository.findPartnershipProjectByUserId(iduser);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PartnershipProjectService implements IPartnershipProject{
 
         float shareofProject = ((float) p.getAmountRequested() / (float) p.getAmountTotal()) * 100;
         p.setShareofProject(shareofProject);
-      //  notifyUsersOfNewProjects(p, "psssst nouveau projet" + p.getProjectName(),"fidele");
+        //  notifyUsersOfNewProjects(p, "psssst nouveau projet" + p.getProjectName(),"fidele");
         return partnershipProjectRepository.save(p);
     }
 
@@ -74,17 +77,15 @@ public class PartnershipProjectService implements IPartnershipProject{
     }
 
 
-
-
     public List<PartnershipProject> findBestProjects(double investmentAmount) {
         List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         Map<PartnershipProject, Double> projectShareValues = new HashMap<>();
         List<PartnershipProject> bestProjects = new ArrayList<>();
 
         for (PartnershipProject project : projects) {
-            if (investmentAmount >= 0.2 * project.getAmountTotal() && investmentAmount<= project.getAmountRequested() ) {
+            if (investmentAmount >= 0.2 * project.getAmountTotal() && investmentAmount <= project.getAmountRequested()) {
                 long projectDuration = ChronoUnit.DAYS.between(project.getStartDate().toInstant(), project.getFinishDate().toInstant());
-                double win=investmentAmount/project.getAmountTotal();
+                double win = investmentAmount / project.getAmountTotal();
                 double projectShareValue = win / projectDuration;
 
                 projectShareValues.put(project, projectShareValue); // store the projectShareValue in the map
@@ -104,9 +105,6 @@ public class PartnershipProjectService implements IPartnershipProject{
     }
 
 
-
-
-
     public void validerProject(Long projectId) {
 
         PartnershipProject project = partnershipProjectRepository.findById(projectId)
@@ -120,18 +118,20 @@ public class PartnershipProjectService implements IPartnershipProject{
             project.setStatu(Statu.refusé);
         } else {
             project.setStatu(Statu.accepté);
-            sendEmailToClient(projectId, "Votre projet a été validé.","hhhhh");
-            notifyUsersOfNewProjects(project,"fidele Salafni","psssst nouveau projet" + project.getProjectName() + project.getShareofProject() +project.getDescriptionProject()+"ne ratez pas cette chance");
+            sendEmailToClient(projectId, "Votre projet a été validé.", "hhhhh");
+            //notifyUsersOfNewProjects(project, "fidele Salafni", "psssst nouveau projet" + project.getProjectName() + project.getShareofProject() + project.getDescriptionProject() + "ne ratez pas cette chance");
+
+            Long user = project.getUser().getPhone();
+            smsClient.SendSMS(String.valueOf(user));
         }
-        Long user = project.getUser().getPhone();
-        smsClient.SendSMS(user.toString());
+
 
         partnershipProjectRepository.save(project);
     }
 
     private int calculateProjectPoints(PartnershipProject project) {
         // Calculer le pourcentage de financement actuel
-        double fundingPercentage = ((double)project.getAmountRequested()/project.getAmountTotal()) * 100;
+        double fundingPercentage = ((double) project.getAmountRequested() / project.getAmountTotal()) * 100;
 
         long projectDuration = ChronoUnit.DAYS.between(project.getStartDate().toInstant(), project.getFinishDate().toInstant());
 
@@ -143,9 +143,9 @@ public class PartnershipProjectService implements IPartnershipProject{
             points += 1;
         } else if (fundingPercentage >= 50) {
             points += 2;
-        }else if (fundingPercentage >= 30) {
+        } else if (fundingPercentage >= 30) {
             points += 3;
-        }else if (fundingPercentage >= 1) {
+        } else if (fundingPercentage >= 1) {
             points += 4;
         }
 
@@ -155,9 +155,9 @@ public class PartnershipProjectService implements IPartnershipProject{
             points += 1;
         } else if (projectDuration >= 180) {
             points += 2;
-        }else if (projectDuration >= 90) {
+        } else if (projectDuration >= 90) {
             points += 3;
-        }else if (projectDuration >= 1) {
+        } else if (projectDuration >= 1) {
             points += 4;
         }
 
@@ -165,7 +165,7 @@ public class PartnershipProjectService implements IPartnershipProject{
     }
 
 
-   // @Scheduled(cron = "*/15 * * * * *")
+    // @Scheduled(cron = "*/15 * * * * *")
     public PartnershipProject BestProject() {
         List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         PartnershipProject bestProject = null;
@@ -181,14 +181,13 @@ public class PartnershipProjectService implements IPartnershipProject{
     }
 
 
-
-    public void sendEmailToClient(Long projectId, String message,String subject) {
+    public void sendEmailToClient(Long projectId, String message, String subject) {
         PartnershipProject project = partnershipProjectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID"));
 
         User user = project.getUser();
 
-        emailService.sendEmail(user.getEmail(),subject, message);
+        emailService.sendEmail(user.getEmail(), subject, message);
     }
 
 
@@ -196,14 +195,14 @@ public class PartnershipProjectService implements IPartnershipProject{
         List<RequestPartnership> requestPartnerships = requestPartnershipRepository.findAll();
         Set<User> users = new HashSet<>();
         for (RequestPartnership requestPartnership : requestPartnerships) {
-            Integer IdClient=requestPartnership.getClientaccount().getIDClient();
-            User user=userRepository.findUserByClientaccount(IdClient);
+            Integer IdClient = requestPartnership.getClientaccount().getIDClient();
+            User user = userRepository.findUserByClientaccount(IdClient);
             users.add(user);
         }
         return new ArrayList<>(users);
     }
 
-    public void notifyUsersOfNewProjects(PartnershipProject p,String subject,String text) {
+    public void notifyUsersOfNewProjects(PartnershipProject p, String subject, String text) {
 
         List<User> users = getAllUsersWithRequests();
 
@@ -213,4 +212,47 @@ public class PartnershipProjectService implements IPartnershipProject{
     }
 
 
+    public void projectNonFinancee(Long projectId ,Long RIB) {
+
+        BankAccount bankAccount = bankAccountRepository.findBankAccountByRIB(RIB);
+        PartnershipProject project = partnershipProjectRepository.findById(projectId).get();
+        Set<RequestPartnership> requests =  project.getRequestPartnerships();
+
+        Date date=project.getStartDate();
+        LocalDateTime dateTime = LocalDateTime.now();
+        Instant instant = date.toInstant();
+        LocalDateTime startDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        for (RequestPartnership request : requests) {
+
+            if (request.getStatu() == Statu.payed && project.getAmountRequested() > 0 && startDateTime.isBefore(dateTime)) {
+
+                float montant = request.getAmountPayed();
+                float account=request.getClientaccount().getSolde()+montant;
+                request.getClientaccount().setSolde((int) account);
+                clientAccountRepository.save(request.getClientaccount());
+
+               float s = bankAccount.getSolde()-montant;
+               bankAccount.setSolde(Float.valueOf(s));
+               bankAccountRepository.save(bankAccount);
+
+               //requestPartnershipRepository.delete(request);
+
+                partnershipProjectRepository.deleteById(projectId);
+
+                System.out.println("malheuresement! le projet a ete supprime ");
+            }
+            else {
+                System.out.println("start date pas encore");
+            }
+
+
+
+        }
+
+
+    }
 }
+
+
+
+

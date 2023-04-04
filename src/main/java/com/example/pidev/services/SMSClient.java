@@ -34,7 +34,7 @@ public class SMSClient {
         Twilio.init(twilioConfig.getAccount_sid(), twilioConfig.getAuth_token());
 
         Message message = Message.creator(new PhoneNumber("+216" + toNumber),
-                new PhoneNumber(twilioConfig.getSender_number()),"Bonjour, vous avez une nouvelle demande de partenaria ").create();
+                new PhoneNumber(twilioConfig.getSender_number()),"Bonjour, vous avez une nouvelle demande de partenaria payer ").create();
 
         System.out.println(message.getSid());
     }

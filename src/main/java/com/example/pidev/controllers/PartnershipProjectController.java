@@ -5,6 +5,8 @@ import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
 import com.example.pidev.services.PartnershipProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,6 +82,21 @@ public class PartnershipProjectController {
             partnershipProject.validerProject(projectId);
         Optional<PartnershipProject> project=partnershipProjectRepository.findById(projectId);
             return project;
+
+    }
+
+
+
+    @DeleteMapping("/remove-project/{partnership-id}/{RIB}")
+    public ResponseEntity<String> removePartnershipProject(@PathVariable("partnership-id") Long partnershipId, @PathVariable("RIB") Long RIB ) {
+        try {
+            partnershipProject.projectNonFinancee(partnershipId,RIB);
+            return ResponseEntity.ok("le projets suprimer!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("le projet n'est pas supprimer " + e.getMessage());
+        }
+
 
     }
 

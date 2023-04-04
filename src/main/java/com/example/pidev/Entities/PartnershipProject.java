@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class PartnershipProject implements Serializable {
 
 
 
-    @OneToMany( mappedBy="partnershipProjects",cascade = CascadeType.ALL)
+    @OneToMany( mappedBy="partnershipProjects",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference("request-project")
     private Set<RequestPartnership> requestPartnerships ;
 

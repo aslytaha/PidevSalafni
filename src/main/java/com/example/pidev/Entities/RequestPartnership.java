@@ -2,16 +2,13 @@ package com.example.pidev.Entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
-
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Entity
@@ -33,6 +30,10 @@ public class RequestPartnership implements Serializable {
     private String request;
     @Enumerated(EnumType.STRING)
     private Act act=Act.partner;
+    @Enumerated(EnumType.STRING)
+    private Statu statu=Statu.en_cours;
+
+
 
 
 

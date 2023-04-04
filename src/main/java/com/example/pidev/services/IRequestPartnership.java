@@ -1,6 +1,7 @@
 package com.example.pidev.services;
 
 
+import com.example.pidev.Entities.PartnershipProject;
 import com.example.pidev.Entities.RequestPartnership;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public interface IRequestPartnership {
     void sendEmailToClients(RequestPartnership request, String message,String subject);
 
      List<RequestPartnership> getBestRequest();
+
+      PartnershipProject payement (Long idRequest , Long RIB);
 
 
 

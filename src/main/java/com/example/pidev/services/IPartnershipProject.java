@@ -33,6 +33,8 @@ public interface IPartnershipProject {
      void notifyUsersOfNewProjects(PartnershipProject p,String subject,String text);
     List<User> getAllUsersWithRequests();
 
+    void projectNonFinancee(Long projectId ,Long RIB);
+
 
 
 
