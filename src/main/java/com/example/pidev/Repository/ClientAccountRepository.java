@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface ClientAccountRepository  extends JpaRepository<ClientAccount, Integer> {
-//    ClientAccount findClientAccountBySolde(float solde);
+
 
 
 }

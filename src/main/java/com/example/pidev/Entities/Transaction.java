@@ -31,16 +31,8 @@ public class Transaction implements Serializable {
     private Long ribrecipient ;
     private String type_transaction ;
     private String validationCode;
-//
-//    @ManyToMany
-//  @JsonIgnore
-//    List<ClientAccount> clientAccountList;
 
 
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "IDClient", nullable = false)
-//    private ClientAccount clientaccount;
 
     @ManyToOne
     private BankAccount Bank_account;

@@ -43,21 +43,6 @@ public class PDFController {
         pdfService.export(response, clients);
     }
 
-	/*@GetMapping("/generate-pdf-IDContract={contract-id}")
-	@ResponseBody
-	public com.lowagie.text.Document generatePDFversion(@PathVariable("contract-id")long id) {
-		Contract c;
-		try {
-			c = ContractService.retrieveContract(id);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PDFExportController contractService;
-		com.lowagie.text.Document d=contractService.generatePDF(c);
-		return d;
-	}
-	*/
 
 
 }

@@ -92,27 +92,6 @@ public class TransactionController {
 
 
 
-/**
-    @PostMapping("/depot")
-    public ResponseEntity<?> depot(@RequestParam Integer IDClient, @RequestParam Float Amount) {
-        try {
-            transactionService.depot(IDClient, Amount);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/retrait")
-    public ResponseEntity<?> retrait(@RequestParam Integer IDClient, @RequestParam Float Amount) {
-        try {
-            transactionService.retrait(IDClient, Amount );
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-*/
 
       //// affichage de l'historique de tout les transaction pour chaque client  /////
 

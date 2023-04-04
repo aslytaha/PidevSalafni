@@ -40,8 +40,7 @@ public class ClientAccount implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
     private Set<PartnershipProjects> partnershipproject;
 
-//    @OneToOne(fetch =FetchType.EAGER,mappedBy="clientaccount")
-//    private User user;
+
 
 
 }

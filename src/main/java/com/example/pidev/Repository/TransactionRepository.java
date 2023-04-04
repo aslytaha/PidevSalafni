@@ -9,6 +9,5 @@ import java.util.List;
 public interface TransactionRepository  extends JpaRepository<Transaction, Integer> {
     List<Transaction> findByClientName(String clientName);
 
-//    @Query("SELECT t FROM Transaction t WHERE t.etat =?1")
-//    List<Transaction> findTransactionsEnAttente(String etat);
+
 }

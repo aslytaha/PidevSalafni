@@ -4,7 +4,7 @@ import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.UserRepository;
 import com.example.pidev.Repository.ClientAccountRepository;
 import com.example.pidev.Service.Classes.ClientAccountService;
-import com.example.pidev.Service.Interface.IClientAccount;
+
 import com.itextpdf.text.DocumentException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 
 
@@ -84,14 +84,6 @@ public class ClientAccountController {
 
         //// statistique des comptes bancaires selon le solde /////
 
-//        // endpoint pour ajouter un client
-//        @PostMapping("/clients")
-//        public ClientAccount addClient(@RequestBody ClientAccount client) {
-//            clientAccountService.add(client);
-//            return client;
-//        }
-
-        // endpoint pour récupérer les clients en fonction de leur solde
         @GetMapping("/clients/{Solde}")
         public List<ClientAccount> getClientsBySolde(@PathVariable("Solde") Float Solde) {
 List<ClientAccount> cli=new ArrayList<>();
@@ -107,9 +99,7 @@ List<ClientAccount> cli=new ArrayList<>();
 
             }return cli;
         }
-       // return clients.stream()
-                   // .filter(c -> clients.getSolde() > 0 && Solde > 0 || clients.getSolde() < 0 && Solde < 0)
-                   // .collect(Collectors.toList());
+
 
 
 

@@ -28,9 +28,7 @@ public class ClientAccountPDFExporter {
         PdfPCell cell = new PdfPCell();
         cell.setBackgroundColor(Color.CYAN);
 
-        //cell.setPadding(5);
-        //Font font =FontFactory.getFont(FontFactory.HELVETICA);
-        //font.setColor(Color.WHITE);
+
 
 
         cell.setPhrase(new Phrase("rib ClientAccount"));
@@ -61,9 +59,7 @@ public class ClientAccountPDFExporter {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document,response.getOutputStream());
         document.open();
-        //Font font =FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-        //font.setColor(Color.BLUE);
-        //font.setSize(18);
+
         Paragraph title = new Paragraph("List of all ClinetAccount");
         document.add(title);
         PdfPTable table = new PdfPTable(6);
