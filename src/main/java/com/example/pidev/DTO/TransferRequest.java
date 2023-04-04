@@ -12,6 +12,6 @@ import lombok.Setter;
 public class TransferRequest {
     private Integer compteEmetteur;
     private Integer compteDestinataire;
-    private float montant;
+    private Float montant;
     private String type_transaction;
 }

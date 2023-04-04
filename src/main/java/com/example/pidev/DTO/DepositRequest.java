@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 public class DepositRequest {
     private Integer compteDestinataire;
-    private float montant;
+    private Float montant;
     private String typeTransaction;
     private LocalDateTime tempsValidation;
 }

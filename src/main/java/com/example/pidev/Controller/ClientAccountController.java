@@ -55,7 +55,7 @@ public class ClientAccountController {
 
     @GetMapping("/Utilisateur/{IDClient}")
     public User UserbyClientAccount(@PathVariable("IDClient") Integer IDClient){
-        return clientAccountService.getUserbyClientAccount(IDClient);
+        return userRepository.findUserByClientaccount(IDClient);
     }
     @GetMapping("/getByID/{IDClient}")
     public ClientAccount getByClientAccount(@PathVariable("IDClient") Integer IDClient)

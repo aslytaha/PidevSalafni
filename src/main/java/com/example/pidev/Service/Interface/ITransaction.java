@@ -12,7 +12,7 @@ public interface ITransaction {
     Transaction findTransactionById(Integer IDtransaction);
 
     void deleteTransactionById(Integer IDtransaction);
-     void depot(Integer compteDestinataire, float montant, String type_transaction) throws Exception;
+     void depot(Integer compteDestinataire, Float montant, String type_transaction) throws Exception;
 
-
+    void transfert(Integer compteEmetteur, Integer compteDestinataire, Float montant, String type_transaction) throws Exception;
 }

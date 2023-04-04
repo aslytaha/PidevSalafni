@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WithdrawRequest {
     private Integer compteDestinataire;
-    private float montant;
+    private Float montant;
     private String typeTransaction;
 }

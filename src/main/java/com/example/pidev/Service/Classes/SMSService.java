@@ -18,12 +18,11 @@ public class SMSService {
     TwilioConfig twilioConfig;
 
 
-    public Message sendSMS(String toNumbre, String code) {
+    public Message sendSMS(String toNumbre) {
         Twilio.init(twilioConfig.getAccount_sid(), twilioConfig.getAuth_token());
 
         Message msg = Message.creator(new PhoneNumber("+216" + toNumbre),
-                new PhoneNumber(twilioConfig.getSender_number()),"Transaction Submited:  "+
-                code).create();
+                new PhoneNumber(twilioConfig.getSender_number()),"Transaction Submited:  ").create();
         System.out.println(msg.getSid());
         return msg ;
     }

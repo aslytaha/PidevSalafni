@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "Transaction")
 public class Transaction implements Serializable {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IDtransaction; // clé primaire
@@ -49,10 +49,10 @@ public class Transaction implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "etat")
     private TransactionState etat;
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private ClientAccount compteEmetteur;
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private ClientAccount compteDestinataire;
 

@@ -34,19 +34,48 @@ public class TransactionService implements ITransaction {
     private ClientAccountRepository clientAccountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-    private IEmailService emailService;
-    private SMSService smsService;
+    private EmailService emailService;
 
 
-    //    public User retrieveUser(ClientAccount clientAccount){
-//        Integer account=clientAccount.getIDClient();
-//
-//        return null;
-//    }
+
+@Autowired
+SMSService smsService;
+
+
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void depot(Integer compteDestinataire, float montant, String type_transaction) throws Exception {
-        ClientAccount clientAccount = clientAccountRepository.findById(compteDestinataire)
-                .get();
+    public void transfert(Integer IdEmmeteur, Integer IdDestinataire,  Float montant , String type_transaction) throws Exception {
+        ClientAccount compteEmetteur = clientAccountRepository.findById(IdEmmeteur).orElseThrow(() -> new Exception("Compte source non trouvé"));
+        ClientAccount compteDestinataire = clientAccountRepository.findById(IdDestinataire).orElseThrow(() -> new Exception("Compte destination non trouvé"));
+
+        float soldeSrc = compteEmetteur.getSolde() - montant;
+        if (compteEmetteur.getSolde() < montant) {
+            throw new Exception("Solde insuffisant");
+        }
+        compteEmetteur.setSolde(soldeSrc);
+        clientAccountRepository.save(compteEmetteur);
+
+
+        float soldeDest = compteDestinataire.getSolde() + montant;
+        compteDestinataire.setSolde(soldeDest);
+        clientAccountRepository.save(compteDestinataire);
+
+
+        Transaction transactionSrc = new Transaction();
+        transactionSrc.setCompteEmetteur(compteEmetteur);
+        transactionSrc.setCompteDestinataire(compteDestinataire);
+        transactionSrc.setAmount(montant);
+        transactionSrc.setDate(LocalDateTime.now());
+        transactionSrc.setType_transaction(type_transaction);
+        transactionSrc.setEtat(TransactionState.PENDING);
+        transactionRepository.save(transactionSrc);
+
+    }
+
+
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void depot(Integer compteDestinataire, Float montant, String type_transaction) throws Exception {
+        ClientAccount clientAccount = clientAccountRepository.findById(compteDestinataire).orElseThrow(() -> new Exception("Compte non trouvé"));
         float solde = clientAccount.getSolde() + montant;
         clientAccount.setSolde(solde);
 
@@ -57,53 +86,17 @@ public class TransactionService implements ITransaction {
         transaction.setDate(LocalDateTime.now());
         transaction.setType_transaction(type_transaction);
         transaction.setEtat(TransactionState.PENDING);
-//        sendEmailToClient(compteDestinataire, "belha miboun","depot trans");
-//
-//       User u = clientAccountService.getUserbyClientAccount(compteDestinataire);
-//       String to = u.getEmail();
-//       String subject = "Transaction validation code";
-//
-//       String code = String.valueOf(11111);    //String code =     //UUID.randomUUID().toString().substring(0, 6);
-//       String text = "Your transaction validation code is: " + code;
-//        emailService.sendEmail(to,subject,text);
 
-
-//        smsService.sendSMS(String.valueOf(u.getPhone()),code);
-//      transaction.setValidationCode(code); // Save validation code in transaction
         transactionRepository.save(transaction);
+        User user =userRepository.findUserByClientaccount(compteDestinataire);
 
+        smsService.sendSMS(String.valueOf(user.getPhone()));
 
     }
 
 
-//    public void sendEmailToClient(Integer IdClient,String message,String subject) {
-//
-//   User clientAccount= userRepository.findUserByClientaccount(IdClient);
-//
-//        emailService.sendEmail(clientAccount.getEmail(),subject, message);
-//    }
 
 
-//
-//    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-//    public void validerTransaction(Integer transactionId, String codeValidation) throws Exception {
-//        Transaction transaction = transactionRepository.findById(transactionId)
-//                .orElseThrow(() -> new Exception("Transaction non trouvée"));
-//        if (!transaction.getValidationCode().equals(codeValidation) /*|| transaction.getDate().plusDays(1).isBefore(LocalDateTime.now())*/) { //Vérifier si la transaction est en attente de validation
-//            transaction.setEtat(TransactionState.CANCELED);
-//            //   transactionRepository.save(transaction);
-//            throw new Exception("La transaction a été annulée car le code de validation est incorrect ou le temps de validation a dépassé 1 jour");
-//        }
-//        if (!transaction.getValidationCode().equals(codeValidation)) { //Vérifier si le code de validation est correct
-//            throw new Exception("Le code de validation est incorrect");
-//        }
-//        transaction.setEtat(TransactionState.VALIDATED); // Mettre à jour l'état de la transaction en "Transaction is validated"
-//        transactionRepository.save(transaction);
-//
-//
-//    }
-//
-//
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void retrait(Integer compteDestinataire, float montant, String type_transaction) throws Exception {
@@ -120,91 +113,9 @@ public class TransactionService implements ITransaction {
         transaction.setDate(LocalDateTime.now());
         transaction.setType_transaction(type_transaction);
         transaction.setEtat(TransactionState.PENDING);
-//        Integer IdClient=clientAccount.getIDClient();
-//        User users=userRepository.findUserByClientaccount(IdClient);
-//
-//        String Emailuser = users.getEmail();
-//        String to = users.getEmail();
-//        String subject = "Transaction validation code";
-//
-        String code = new SecureRandom().ints(6, 0, 36)
-                .mapToObj(i -> Integer.toString(i, 36))
-                .collect(Collectors.joining())
-                .toUpperCase();
-//        String text = "Your transaction validation code is: " + code;
-//        emailService.sendEmail(to, subject, text);
-//        smsService.sendSMS(String.valueOf(users.getPhone()),code);
-
-        transaction.setValidationCode(code); // Save validation code in transaction
-
         transactionRepository.save(transaction);
     }
 
-
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void transfert(Integer compteEmetteur, Integer compteDestinataire, float montant, String type_transaction) throws Exception {
-        ClientAccount compteEmmetteur = clientAccountRepository.findById(compteEmetteur).orElseThrow(() -> new Exception("Compte source non trouvé"));
-        ClientAccount compteDesstinataire = clientAccountRepository.findById(compteDestinataire).orElseThrow(() -> new Exception("Compte destination non trouvé"));
-        float soldeSrc = compteEmmetteur.getSolde() - montant;
-        if (compteEmmetteur.getSolde() < montant) {
-            throw new Exception("Solde insuffisant");
-        }
-        compteEmmetteur.setSolde(soldeSrc);
-        clientAccountRepository.save(compteEmmetteur);
-
-        float soldeDest = compteDesstinataire.getSolde() + montant;
-
-        compteDesstinataire.setSolde(soldeDest);
-
-        clientAccountRepository.save(compteDesstinataire);
-
-        Transaction transactionSrc = new Transaction();
-        transactionSrc.setCompteEmetteur(compteEmmetteur);
-        transactionSrc.setAmount(-montant);
-        transactionSrc.setDate(LocalDateTime.now());
-        transactionSrc.setType_transaction(type_transaction);
-        transactionSrc.setEtat(TransactionState.PENDING);
-        transactionRepository.save(transactionSrc);
-
-        Transaction transactionDest = new Transaction();
-        transactionDest.setCompteDestinataire(compteDesstinataire);
-        transactionDest.setAmount(montant);
-        transactionDest.setDate(LocalDateTime.now());
-        transactionDest.setType_transaction(type_transaction);
-         transactionDest.setEtat(transactionSrc.getEtat());
-        transactionRepository.save(transactionDest);
-//        Integer IdEmmeteur=compteEmmetteur.getIDClient();
-//        User userEmmeteur=userRepository.findUserByClientaccount(IdEmmeteur);
-//
-//
-//        String to = userEmmeteur.getEmail();// getClient().getEmail();
-//        String senderName =userEmmeteur.getName();
-////    String recipientEmail = compteDestinataire.getNom(); here i can create Query to bring the name of the recipient
-//        Integer IdRecepteur=compteEmmetteur.getIDClient();
-//        User userRecepteur=userRepository.findUserByClientaccount(IdRecepteur);
-//        String recipientName = userRecepteur.getName();
-//        String subject = "Transfer successful";
-//        String code = new SecureRandom().ints(6, 0, 36)
-//                .mapToObj(i -> Integer.toString(i, 36))
-//                .collect(Collectors.joining())
-//                .toUpperCase();
-//        String text = "Dear " + senderName + ",\n\nYour transfer of " + montant + " To " + recipientName + "has been successful. \n\nThank you for using our banking services.\n\nBest regards,\nBank XYZ";
-//        emailService.sendEmail(to, subject, text);
-    //é    transactionSrc.setValidationCode(code);
-//
-//
-//        String A = userRecepteur.getName();// getClient().getEmail();
-//        String sender = userEmmeteur.getName();
-////    String recipientEmail = compteDestinataire.getNom(); here i can create Query to bring the name of the recipient
-//        String recipient = userRecepteur.getName();
-//        String body = "Transfer successful";
-//
-//        String words = "Dear " + recipient + ",\n\nYou have receive amount of " + montant + " From " + sender + ". \n\nThank you for using our banking services.\n\nBest regards,\nBank XYZ";
-//        emailService.sendMail(A, body, words);
-        //transactionSrc.setValidationCode(code);
-
-
-    }
 
 @Override
     public List<Transaction> findAllTransaction() {
