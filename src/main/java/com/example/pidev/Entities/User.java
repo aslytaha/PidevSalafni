@@ -2,9 +2,11 @@ package com.example.pidev.Entities;
 
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table( name = "Users")
+@Table( name = "Users",uniqueConstraints = { @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email") })
 public class User implements Serializable  {
 
     @Id
@@ -25,10 +27,17 @@ public class User implements Serializable  {
     @Column(name = "iduser", length = 255)
     private Long idUser;
 
+
+
+    @NotBlank(message = "Username is required")
+    @Size(max = 20)
+    @NotNull
     private String  Username;
 
+    @NotNull
     private String Password;
 
+    @Email(message = "Email is not valid")
     private String Email;
 
     private String FirstName;

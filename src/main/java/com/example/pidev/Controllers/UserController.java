@@ -28,7 +28,7 @@ public class UserController {
 
     JavaMailSender mailSender;
 
-     @Autowired
+
     SmsService smsService;
     @Autowired
     UserCodeService codeService;
@@ -50,6 +50,8 @@ public class UserController {
 //        return (User) authentication.getPrincipal();
 //    }
 
+
+
 //// Connected User Profile ////////
     @GetMapping("/profile")
     public User getConnectedUser(Authentication authentication) {
@@ -59,11 +61,12 @@ public class UserController {
         return user;
     }
 
-/////// Sign-UP ///////////
 
+/////// Sign-UP ///////////
     @PostMapping({"/register"})
     public User registerNewUser(@RequestBody User user) {
         User NewUser= userService.registerUser(user);
+
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(user); // création du jeton de vérification
         verificationTokenService.saveVerificationToken(verificationToken);
         return NewUser;
@@ -88,8 +91,8 @@ public class UserController {
     }
 
 
+
 ///////Reset Password Sms////////
-    
     @PostMapping({"/SendSMS/{Phone}"})
     public User SmsSender(@PathVariable Long Phone) {
         User NewUser=userService.retrieveUserByPhone(Phone);
@@ -99,7 +102,6 @@ public class UserController {
 
         return NewUser;
     }
-
 
 
     @PutMapping("/reset-password/{verificationCode}")
