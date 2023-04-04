@@ -49,14 +49,13 @@ public class LoanProjectController {
 //    }
 
 
-    @GetMapping("/retrieve/{id}")
-        public LoanProject getLoanProjectByiddd (@PathVariable Long id){
-        return loanProject.getLoanProjectById(id);
-        }
+//    @GetMapping("/retrieve/{id}")
+//    public LoanProject getLoanProjectByiddd(@PathVariable Long id) {
+//        return loanProject.getLoanProjectById(id);
+//    }
 
 
-
-//    @PostMapping("/add-project")
+    //    @PostMapping("/add-project")
 //    public LoanProject add(@RequestBody LoanProject p, Principal principal) {
 //        p.setValidate(false); //validate par defaut false dès l'ajout
 //        p.setRemainingamount(p.getLoanamount());
@@ -70,32 +69,28 @@ public class LoanProjectController {
 //    LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
 //    return loan.save(loanproject);
 //}
-@PostMapping("/add-project")
-public LoanProject add(@RequestBody LoanProject p, Principal principal) {
-    p.setValidate(false); // validate par defaut false dès l'ajout
-    p.setRemainingamount(p.getLoanamount());
-    LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
+    @PostMapping("/add-project")
+    public LoanProject add(@RequestBody LoanProject p, Principal principal) {
+//    p.setValidate(false); // validate par defaut false dès l'ajout
+        p.setRemainingamount(p.getLoanamount());
+        LoanProject loanproject = loanProject.createLoanProject((Authentication) principal, p);
 
-    // Validate the loan project
-    if (loanProject.isLoanProjectValid(loanproject)) {
-        loanproject.setValidate(true);
-    }
 
-    List<Amortization> amortizationTable = amor.generateAmortizationTable(loanproject);
+        List<Amortization> amortizationTable = amor.generateAmortizationTable(loanproject);
 
 // Set the LoanProject object for each Amortization object in the list
-    amortizationTable.forEach(a -> a.setLoanproject(loanproject));
+        amortizationTable.forEach(a -> a.setLoanproject(loanproject));
 
 // Save the amortization table for the loan project
-    amor.saveAll(amortizationTable);
+        amor.saveAll(amortizationTable);
+        LoanProject lal = loan.save(loanproject);
+        // Validate the loan project
+        if (loanProject.isLoanProjectValid(lal)) {
+            lal.setValidate(true);
+        }
+        return lal;
 
-    return loan.save(loanproject);
-
-}
-
-
-
-
+    }
 
 
     @DeleteMapping("/remove/{Idprojet}")
@@ -105,10 +100,9 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
 
     @PutMapping("/update")
     public LoanProject update(@RequestBody LoanProject p) {
-        LoanProject loanproject= loanProject.update(p);
+        LoanProject loanproject = loanProject.update(p);
         return loanproject;
     }
-
 
 
 //    public void Nbborrowers(double amount) {
@@ -142,14 +136,15 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
 
     @PutMapping("/{projectId}/borrow")
     public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount, Principal principal) {
-        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount,principal);
+        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount, principal);
         if (loanproject != null) {
             return ResponseEntity.ok(loanproject);
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
 
+    }
+}
 
 
 
@@ -167,5 +162,5 @@ public LoanProject add(@RequestBody LoanProject p, Principal principal) {
 
 
 
-}
+
 

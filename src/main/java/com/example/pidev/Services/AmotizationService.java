@@ -77,22 +77,28 @@ public List<Amortization> generateAmortizationTable(LoanProject loanproject) {
 
     Date finishDate = loanproject.getFinishdate();
     LocalDate localFinishDate = finishDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
+     ////création d'une liste et sera remplie par les paiements d'amortiss
     List<Amortization> amortizationTable = new ArrayList<>();
     int numPaymentsPerYear = 12; // by default, assume monthly payments
     if (paymentType == type.QUARTERLY) {
         numPaymentsPerYear = 4;
     }
     float interestRate = 0.15f; // assume fixed interest rate of 15%
+        //cette methode calcule le nb total de paiem pendant la durée du pret
     int numPayments = calculateNumPayments(startDate, localFinishDate, numPaymentsPerYear, paymentType);
     float monthlyInterestRate = interestRate / numPaymentsPerYear;
+    //calcul du paiement mensuel
     float monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, numPayments);
 
     float remainingBalance = loanAmount;
     LocalDate currentDate = startDate;
     for (int i = 0; i < numPayments; i++) {
+        // calcule le montant d'intérêt à payer pour le paiement d'amortissement actuel.
         float interest = remainingBalance * monthlyInterestRate;
+        //calcule le montant principal à payer pour le paiement d'amortissement actuel.
         float principal = monthlyPayment - interest;
+       //vérifie si le montant principal calculé dépasse le montant restant
+       // vérifie si le solde restant moins le principal est inférieur à zéro. Si c'est le cas, le principal est réduit pour correspondre au solde restant et le paiement mensuel est recalculé en ajoutant les intérêts. Cela permet d'éviter les paiements excessifs lorsque le solde restant est inférieur au paiement mensuel.
         if (remainingBalance - principal < 0) {
             principal = remainingBalance;
             monthlyPayment = principal + interest;

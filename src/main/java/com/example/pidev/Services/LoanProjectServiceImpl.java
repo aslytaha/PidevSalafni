@@ -16,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public  class LoanProjectServiceImpl implements Iloan {
     DetailsLoansServiceImpl detailss;
     @Autowired
     UserRepository userop;
-    @Autowired
+
     EmailService service;
 
 
@@ -40,30 +41,29 @@ public  class LoanProjectServiceImpl implements Iloan {
         return projectRepository.findAll();
     }
 
-    @Override
-    public LoanProject getLoanProjectById(Long id) {
-        return projectRepository.findById(id).get();
-    }
-
 //    @Override
-//    public LoanProject createLoanProject(Authentication authentication, LoanProject loanProject) {
-//        User user = userop.findByUsername(authentication.getName());
-//        loanProject.setUser(user);
-//
-//        // set payment type from user input
-//        String paymentTypeStr = loanProject.getPaymenttype().toString().toUpperCase();
-//        type paymentType = type.valueOf(paymentTypeStr);
-//        loanProject.setPaymenttype(paymentType);
-//        return projectRepository.save(loanProject);
+//    public LoanProject getLoanProjectById(Long id) {
+//        return projectRepository.findByIdprojet(id);
 //    }
 
+
+public boolean isLoanProjectValid(LoanProject project) {
+    boolean isValid = false;
+
+    // Check if loan amount is between 5000 and 50000 and user has no existing loan projects
+    if ((project.getLoanamount() > 5000 ) && (project.getLoanamount() < 50000)){
+        return   true;
+    }else
+
+        return isValid;
+}
 
     @Override
     public LoanProject createLoanProject(Authentication authentication, LoanProject loanProject) {
         User user = userop.findByUsername(authentication.getName());
         loanProject.setUser(user);
         loanProject.setOwner(user.getUsername());
-
+        loanProject.setValidate(false);
         // set payment type from user input
         String paymentTypeStr = loanProject.getPaymenttype().toString().toUpperCase();
         type paymentType = type.valueOf(paymentTypeStr);
@@ -82,44 +82,48 @@ public  class LoanProjectServiceImpl implements Iloan {
         loanProject.setRefundperiod(calendar.getTime());
 
         LoanProject savedProject = projectRepository.save(loanProject);
-
-        if (!isLoanProjectValid(savedProject)) {
-            savedProject.setValidate(false);
-            projectRepository.save(savedProject);
+        if (isLoanProjectValid(savedProject)==true) {
+            System.out.println("ttttttttttttttttttttttttt");
+            savedProject.setValidate(true);
+            update(savedProject);
         }
 
         return savedProject;
     }
 
 
+    @Override
+    public LoanProject update(LoanProject p) {
+        LoanProject project = projectRepository.findById(p.getIdprojet()).orElse(null);
+        if (project != null) {
+            project.setValidate(p.getValidate());
+            return projectRepository.save(project);
+        } else {
+            return null;
+        }
+    }
+
 
     @Override
-        @Transactional
-        public LoanProject update (LoanProject p){
-            return projectRepository.save(p);
-        }
-
-
-        @Override
-        public void delete (Long Idprojet){
+    public void delete(Long Idprojet) {
 //        projectRepository.findById;
-            projectRepository.deleteById(Idprojet);
+        projectRepository.deleteById(Idprojet);
 
+    }
+
+
+    //
+    @Transactional
+    public void deleteProjectAndDetails(Long Idprojet) {
+        LoanProject project = projectRepository.findById(Idprojet).orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + Idprojet));
+        DetailsLoans detailsss = project.getDetailsLoans();
+
+        if (detailsss != null) {
+            detail.delete(detailsss);
         }
 
-
-//
-        @Transactional
-        public void deleteProjectAndDetails (Long Idprojet){
-            LoanProject project = projectRepository.findById(Idprojet).orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + Idprojet));
-            DetailsLoans detailsss = project.getDetailsLoans();
-
-            if (detailsss != null) {
-                detail.delete(detailsss);
-            }
-
-            projectRepository.delete(project);
-        }
+        projectRepository.delete(project);
+    }
 
 //    @Override
 //    public int countborrowerByProject( Float amountborrowed) {
@@ -129,7 +133,7 @@ public  class LoanProjectServiceImpl implements Iloan {
 //    }
 
 
-//        public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed) {
+    //        public LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed) {
 //            // Récupération du projet de prêt à partir de l'ID
 //            LoanProject loanProject = projectRepository.findById(Idprojet).orElse(null);
 //
@@ -204,68 +208,58 @@ public  class LoanProjectServiceImpl implements Iloan {
 //
 //    return loanP;
 //}
-        @Override
-        public LoanProject updateLoanAmount (Long Idprojet, Float amountborrowed, Principal principal){
-            // Récupération du projet de prêt à partir de l'ID
-            LoanProject loanP = projectRepository.findById(Idprojet).orElse(null);
-            if (loanP == null) {
-                return null;
-            }
 
-            Float remainingamount = loanP.getRemainingamount();
-
-
-            // Mise à jour du montant total du prêt en soustrayant le montant emprunté
-            remainingamount -= amountborrowed;
-
-            // Récupération de l'utilisateur connecté
-            // Création d'une nouvelle entité DetailsLoans
-            DetailsLoans newDetailsLoan = new DetailsLoans();
-            newDetailsLoan.setAmountborrowed(amountborrowed);
-            newDetailsLoan.setBorrowedName(principal.getName());
-            newDetailsLoan.setLoanDate(loanP.getDetailsLoans().getLoanDate());
-
-            // Enregistrement du nouveau DetailsLoans dans la base de données
-            detail.save(newDetailsLoan);
-
-            // Mise à jour de l'entité du projet de prêt avec le nouveau DetailsLoans
-            loanP.setDetailsLoans(newDetailsLoan);
-
-            // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
-            loanP.setRemainingamount(remainingamount);
-
-
-            // Enregistrement des changements dans la base de données
-            projectRepository.save(loanP);
-            User user = userop.findByUsername(loanP.getOwner());
-            System.out.println("user" + user.getUsername());
-            String to = user.getEmail();
-            String Subject = "Loan Project updated !";
-            String text = "Dear " + user.getUsername() + ",\n\n"
-                    + "The loan project '" + loanP.getProjectname() + "' has been updated with a new amount borrowed of " + amountborrowed + " by " + principal.getName() + ".\n\n";
-
-            try {
-                service.sendEmail(to, Subject, text);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-            return loanP;
-
+    public LoanProject updateLoanAmount (Long Idprojet, Float amountborrowed, Principal principal){
+        // Récupération du projet de prêt à partir de l'ID
+        LoanProject loanP = projectRepository.findById(Idprojet).orElse(null);
+        if (loanP == null) {
+            System.out.println("null");
         }
 
+        Float remainingamount = loanP.getRemainingamount();
 
-    public boolean isLoanProjectValid(LoanProject project) {
-        boolean isValid = true;
 
-        // Check if loan amount is between 5000 and 50000
-        if ((project.getLoanamount() < 5000) || (project.getLoanamount() > 50000) || !(project.getUser().getLoanProjects().isEmpty())) {
-            project.setValidate(false);
-            isValid = false;
+        // Mise à jour du montant total du prêt en soustrayant le montant emprunté
+        remainingamount -= amountborrowed;
+
+
+        DetailsLoans newDetailsLoan = new DetailsLoans();
+        newDetailsLoan.setAmountborrowed(amountborrowed);
+        newDetailsLoan.setBorrowedName(principal.getName());
+        newDetailsLoan.setLoanDate(new Date());
+        // Enregistrement du nouveau DetailsLoans dans la base de données
+        detail.save(newDetailsLoan);
+
+        // Mise à jour de l'entité du projet de prêt avec le nouveau DetailsLoans
+        loanP.setDetailsLoans(newDetailsLoan);
+
+        // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
+        loanP.setRemainingamount(remainingamount);
+
+
+        // Enregistrement des changements dans la base de données
+        projectRepository.save(loanP);
+
+        User user = userop.findByUsername(loanP.getOwner());
+        System.out.println("user" + user.getUsername());
+        String to = user.getEmail();
+        String Subject = "Loan Project updated !";
+        String text = "Dear " + user.getUsername() + ",\n\n"
+                + "The loan project '" + loanP.getProjectname() + "' has been updated with a new amount borrowed of " + amountborrowed + " by " + principal.getName() + ".\n\n";
+
+        try {
+            service.sendEmail(to, Subject, text);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
 
+        return loanP;
 
-        return isValid;
     }
+
+
+
+
 
 }
 
@@ -274,61 +268,10 @@ public  class LoanProjectServiceImpl implements Iloan {
 
 
 
-//    @Transactional
-//    public LoanProject updateLoanAmount(Long Id, DetailsLoans details) {
-//        LoanProject project = projectRepository.findById(Id).orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + Id));
-//
-//        Float amountborrowed = details.getAmountborrowed();
-//        project.setLoanamount(project.getLoanamount() - amountborrowed); // Mettre à jour la valeur de loanAmount
-//
-//        projectRepository.save(project);
-//        detail.save(details);
-//
-//
-//        return project;
-//    }
-
-//    @Transactional
-//    public LoanProject updateLoanAmount(Long Id, Float amountborrowed) {
-//        LoanProject project = projectRepository.findById(Id).orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + Id));
-//
-//        // Mettre à jour la valeur de loanAmount
-//        project.setLoanamount(project.getLoanamount() - amountborrowed);
-//
-//        // Créer un objet DetailsLoans avec les détails de prêt et lier à LoanProject
-//        DetailsLoans details = new DetailsLoans();
-//        details.setAmountborrowed(amountborrowed);
-//        details.setLoanDate(new Date());
-//        details.setLoanProject(project);
-//
-//        // Sauvegarder les modifications dans la base de données
-//        projectRepository.save(project);
-//        detail.save(details);
-//
-//        return project;
-//    }
 
 
-//////3eme esaaai
 
-//    @Transactional
-//    public LoanProject updateLoanAmount(Long id, DetailsLoans details) {
-//        LoanProject project = projectRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + id));
-//
-//        float amountBorrowed = details.getAmountborrowed();
-//        float remainingAmount = project.getLoanamount() - amountBorrowed;
-//
-//        if (remainingAmount < 0) {
-//            throw new IllegalArgumentException("Amount borrowed cannot exceed loan amount");
-//        }
-//
-//        project.setLoanamount(remainingAmount);
-//        details.setLoanProject(project);
-//        detail.save(details);
-//
-//        return project;
-//    }
+
 
 
 
