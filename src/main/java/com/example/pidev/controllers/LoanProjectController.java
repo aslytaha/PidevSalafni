@@ -149,6 +149,15 @@ public class LoanProjectController {
 //    LoanProject project = loanProject.updateLoanAmount(id, details);
 //    return ResponseEntity.ok(project);
 //}
+@PostMapping("/add-remaining-amount")
+public ResponseEntity<String> addRemainingAmountToLoanProject() {
+    try {
+        loanProject.addRemainingAmountToLoanProject();
+        return ResponseEntity.ok("Remaining amount added to loan project successfully.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+}
 
 
 

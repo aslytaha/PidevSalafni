@@ -35,6 +35,26 @@ public interface Iloan {
     LoanProject addAssuranceToProjectByName(Long Idprojet, String assurancename);
 
     List<String> getAllBorrowers();
+
+    //    @Transactional
+    //    public LoanProject updateLoanAmount(Long id, DetailsLoans details) {
+    //        LoanProject project = projectRepository.findById(id)
+    //                .orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + id));
+    //
+    //        float amountBorrowed = details.getAmountborrowed();
+    //        float remainingAmount = project.getLoanamount() - amountBorrowed;
+    //
+    //        if (remainingAmount < 0) {
+    //            throw new IllegalArgumentException("Amount borrowed cannot exceed loan amount");
+    //        }
+    //
+    //        project.setLoanamount(remainingAmount);
+    //        details.setLoanProject(project);
+    //        detail.save(details);
+    //
+    //        return project;
+    //    }
+    void addRemainingAmountToLoanProject();
     //   Map<Long, List<User>> getAllBorrowers();
    // List<String> getAllProjectOwners();
 

@@ -1,6 +1,7 @@
 package com.example.pidev.services;
 
 
+import com.example.pidev.Entities.Amortization;
 import com.example.pidev.Entities.Assurance;
 import com.example.pidev.Entities.LoanProject;
 import com.example.pidev.Repositories.AssuranceRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -220,5 +222,17 @@ public  class LoanProjectServiceImpl implements Iloan {
 //
 //        return project;
 //    }
+    // @Scheduled(cron = "0 0 18 * * *")
+    @Override
+    public void addRemainingAmountToLoanProject() {
+    List<LoanProject> loanProjects = projectRepository.findAll();
+
+    List<LoanProject> lp = loanProjects.stream().filter(s -> s.getRemainingamount() > 0).collect(Collectors.toList());
+    for (LoanProject aaaaaaa : lp) {
+        float r = aaaaaaa.getRemainingamount();
+        Amortization amortization = new Amortization();
+        amortization.setRemainingAmount(r);
+    }
+}
 
 }

@@ -7,6 +7,7 @@ import com.example.pidev.services.ITransaction;
 import com.example.pidev.Entities.Transaction;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
-
+//@Repository
 @AllArgsConstructor
 @Service
 
@@ -76,6 +77,12 @@ public class TransactionService implements ITransaction {
         transactionRepository.save(s);
         return 0;
     }
+
+    @Override
+    public List<Transaction> getAllTransactios() {
+        return transactionRepository.findAll();
+    }
+
     @Override
     public String approveTransaction(Transaction s) throws MessagingException {
         int code =0;
