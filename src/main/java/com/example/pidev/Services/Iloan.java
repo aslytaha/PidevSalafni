@@ -16,6 +16,7 @@ public interface Iloan {
     List<LoanProject> getAllLoanProjects();
 
 
+    void deleteLoanProject(Long projectId);
 
     LoanProject createLoanProject(Authentication authentication, LoanProject loanProject);
 

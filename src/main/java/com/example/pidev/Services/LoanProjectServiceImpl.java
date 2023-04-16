@@ -41,16 +41,27 @@ public  class LoanProjectServiceImpl implements Iloan {
         return projectRepository.findAll();
     }
 
-//    @Override
-//    public LoanProject getLoanProjectById(Long id) {
-//        return projectRepository.findByIdprojet(id);
-//    }
+    public List<LoanProject> getLoanProject() {
+        return projectRepository.getLoanProjectByDetail();
+    }
 
 
-public boolean isLoanProjectValid(LoanProject project) {
+
+    @Override
+    public void deleteLoanProject(Long projectId) {
+        LoanProject loanProject = projectRepository.findById(projectId).orElse(null);
+        if (loanProject != null) {
+
+            detail.deleteAllByLoanProject(loanProject);
+            projectRepository.deleteById(projectId);
+        }
+    }
+
+
+
+    public boolean isLoanProjectValid(LoanProject project) {
     boolean isValid = false;
 
-    // Check if loan amount is between 5000 and 50000 and user has no existing loan projects
     if ((project.getLoanamount() > 5000 ) && (project.getLoanamount() < 50000)){
         return   true;
     }else
@@ -210,7 +221,6 @@ public boolean isLoanProjectValid(LoanProject project) {
 //}
 
     public LoanProject updateLoanAmount (Long Idprojet, Float amountborrowed, Principal principal){
-        // Récupération du projet de prêt à partir de l'ID
         LoanProject loanP = projectRepository.findById(Idprojet).orElse(null);
         if (loanP == null) {
             System.out.println("null");
@@ -219,7 +229,6 @@ public boolean isLoanProjectValid(LoanProject project) {
         Float remainingamount = loanP.getRemainingamount();
 
 
-        // Mise à jour du montant total du prêt en soustrayant le montant emprunté
         remainingamount -= amountborrowed;
 
 
@@ -227,17 +236,13 @@ public boolean isLoanProjectValid(LoanProject project) {
         newDetailsLoan.setAmountborrowed(amountborrowed);
         newDetailsLoan.setBorrowedName(principal.getName());
         newDetailsLoan.setLoanDate(new Date());
-        // Enregistrement du nouveau DetailsLoans dans la base de données
         detail.save(newDetailsLoan);
 
-        // Mise à jour de l'entité du projet de prêt avec le nouveau DetailsLoans
         loanP.setDetailsLoans(newDetailsLoan);
 
-        // Mise à jour de l'entité du projet de prêt avec le nouveau montant total du prêt
         loanP.setRemainingamount(remainingamount);
 
 
-        // Enregistrement des changements dans la base de données
         projectRepository.save(loanP);
 
         User user = userop.findByUsername(loanP.getOwner());

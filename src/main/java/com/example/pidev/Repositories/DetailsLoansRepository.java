@@ -1,6 +1,7 @@
 package com.example.pidev.Repositories;
 
 import com.example.pidev.Entities.DetailsLoans;
+import com.example.pidev.Entities.LoanProject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,8 +12,9 @@ import java.util.List;
 @Repository
 public interface DetailsLoansRepository extends JpaRepository<DetailsLoans,Integer> {
 
-//    public DetailsLoans findByIdDetails(Integer idDetails);
+    //    public DetailsLoans findByIdDetails(Integer idDetails);
     void delete(DetailsLoans detail);
-//    @Query("FROM DetailsLoans d WHERE d.amountborrowed = :amountborrowed")
-//    List<DetailsLoans> countProductByType(@Param(value = "amountborrowed") Float amountborrowed);
+
+    @Query("DELETE FROM DetailsLoans d WHERE d.loanProject = :loanProject")
+    void deleteAllByLoanProject(@Param("loanProject") LoanProject loanProject);
 }

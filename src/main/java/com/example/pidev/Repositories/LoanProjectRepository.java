@@ -18,6 +18,9 @@ public interface LoanProjectRepository extends JpaRepository <LoanProject,Long> 
 //    @Query("SELECT u FROM User u  WHERE u.idUser = ?1")
 //    User getUserbyLoan(@Param("idUser") Long idUser);
 //
-//    @Query("SELECT l FROM LoanProject l  WHERE l.Idprojet = ?1")
-//    LoanProject findByIdprojet(@Param("Idprojet") Long Idprojet);
+@Query("SELECT l FROM LoanProject l JOIN FETCH l.detailsLoans")
+List<LoanProject> getLoanProjectByDetail();
+
+
+
 }
