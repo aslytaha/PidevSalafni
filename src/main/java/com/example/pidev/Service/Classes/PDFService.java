@@ -35,7 +35,7 @@ public class PDFService {
         fontParagraph.setSize(12);
 
         for (ClientAccount client : clients) {
-            Paragraph clientParagraph = new Paragraph("Nom: " + client.getSubscription() + ", Prénom: " + client.getSolde(), fontParagraph);
+            Paragraph clientParagraph = new Paragraph("Subscription: " + client.getSubscription() + ", Solde: " + client.getSolde()+", id:"+ client.getIDClient(), fontParagraph);
             document.add(clientParagraph);
         }
 

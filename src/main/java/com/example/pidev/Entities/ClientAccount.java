@@ -34,11 +34,11 @@ public class ClientAccount implements Serializable {
 
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
-    private Set<LoanProject> loanproject;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
-    private Set<PartnershipProjects> partnershipproject;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
+//    private Set<LoanProject> loanproject;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")
+//    private Set<PartnershipProjects> partnershipproject;
 
 
 

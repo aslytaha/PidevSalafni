@@ -36,7 +36,7 @@ public class TransactionService implements ITransaction {
     private ClientAccountRepository clientAccountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-    private EmailService emailService;
+
 
 
 
@@ -139,10 +139,11 @@ SMSService smsService;
     public void deleteTransactionById(Integer IDtransaction) {
         transactionRepository.deleteById(IDtransaction);
     }
-
-
-
 }
+
+
+
+
 
 /*
     @Transactional

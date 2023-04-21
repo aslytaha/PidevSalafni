@@ -1,8 +1,7 @@
 package com.example.pidev.Entities;
 
-
-
-public enum status {
-    PAYED,NOTPAYED,EXPIRED
+public enum Status {
+    EN_ATTENTE,
+    EN_COURS,
+    TRAITEE
 }
-

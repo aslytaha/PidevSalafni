@@ -66,18 +66,7 @@ public class ClientAccountController {
 
 
 
-    @GetMapping("/export")
-    public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
-        response.setContentType("application/pdf");
-        DateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
-        String currentDateTime = dateFormater.format(new Date());
-        String headerKey = "Content-Disposition";
-        String headerValue = "Attachement;filename=inves_"+ currentDateTime + ".pdf";
-        response.setHeader(headerKey, headerValue);
-        List<ClientAccount> listclientAccount =clientAccountService.getAllClientAccount();
-        ClientAccountPDFExporter exporter = new ClientAccountPDFExporter(listclientAccount);
-        exporter.export(response);
-    }
+
 
 
 
