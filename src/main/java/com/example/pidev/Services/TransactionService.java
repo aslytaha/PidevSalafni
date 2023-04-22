@@ -2,7 +2,11 @@ package com.example.pidev.Services;
 
 import com.example.pidev.Entities.ClientAccount;
 import com.example.pidev.Entities.Transaction;
+<<<<<<< Updated upstream
 import com.example.pidev.Entities.TransactionState;
+=======
+import com.example.pidev.Enumerations.TransactionState;
+>>>>>>> Stashed changes
 import com.example.pidev.Entities.User;
 import com.example.pidev.Interfaces.ITransaction;
 import com.example.pidev.Repositories.ClientAccountRepository;
@@ -34,12 +38,20 @@ public class TransactionService implements ITransaction {
     private ClientAccountRepository clientAccountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+<<<<<<< Updated upstream
     private EmailService emailService;
+=======
+
+>>>>>>> Stashed changes
 
 
 
 @Autowired
+<<<<<<< Updated upstream
  SmsService smsService;
+=======
+SMSServiceTransaction smsService;
+>>>>>>> Stashed changes
 
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -93,7 +105,11 @@ public class TransactionService implements ITransaction {
         transaction.setEtat(TransactionState.PENDING);
         transactionRepository.save(transaction);
 
+<<<<<<< Updated upstream
         User user =userRepository.findUserByClientaccount(Long.valueOf(compteDestinataire));
+=======
+        User user =userRepository.findUserByClientaccount(compteDestinataire);
+>>>>>>> Stashed changes
         smsService.sendSMS(String.valueOf(user.getPhone()));
 
     }
@@ -120,7 +136,11 @@ public class TransactionService implements ITransaction {
         transaction.setType_transaction(type_transaction);
         transaction.setEtat(TransactionState.PENDING);
         transactionRepository.save(transaction);
+<<<<<<< Updated upstream
         User user =userRepository.findUserByClientaccount(Long.valueOf(compteDestinataire));
+=======
+        User user =userRepository.findUserByClientaccount(compteDestinataire);
+>>>>>>> Stashed changes
         smsService.sendSMS(String.valueOf(user.getPhone()));
     }
 

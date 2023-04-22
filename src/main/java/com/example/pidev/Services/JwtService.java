@@ -1,18 +1,15 @@
 package com.example.pidev.Services;
 
 import com.example.pidev.Config.JwtUtil;
-import com.example.pidev.Entities.JwtRequest;
-import com.example.pidev.Entities.JwtResponse;
+import com.example.pidev.DTO.JwtRequest;
+import com.example.pidev.DTO.JwtResponse;
 import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -47,7 +47,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/authenticate", "/register" ,"/verify/**" ,"/SendSMS/**","/reset-password/**").permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()
+<<<<<<< Updated upstream
                 .antMatchers("/profile","/partnership/**","/request/**","/Details/**","/Project/**").authenticated()
+=======
+                .antMatchers("/profile","/Project/**","/Details/**").authenticated()
+>>>>>>> Stashed changes
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()

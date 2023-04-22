@@ -66,6 +66,10 @@ public class UserController {
     @PostMapping({"/register"})
     public User registerNewUser(@RequestBody User user) {
         User NewUser= userService.registerUser(user);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(user); // création du jeton de vérification
         verificationTokenService.saveVerificationToken(verificationToken);
         return NewUser;
@@ -125,8 +129,11 @@ public class UserController {
         }
     }
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 ///// Assign Role To User ////////
 
     @PutMapping  ({"/addRole/{roleName}/{Username}"})

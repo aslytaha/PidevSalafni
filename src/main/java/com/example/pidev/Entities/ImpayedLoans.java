@@ -21,7 +21,11 @@ public class ImpayedLoans {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ID")
     private Integer ID ; // clé primaire
+<<<<<<< Updated upstream
     private Integer numTrans;
+=======
+    private int paymentNumber;
+>>>>>>> Stashed changes
     private Long iProjet;
     private float AmountNotPayed;
     private float NewAmountToPay;

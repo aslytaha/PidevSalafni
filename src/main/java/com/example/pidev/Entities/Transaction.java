@@ -1,4 +1,8 @@
 package com.example.pidev.Entities;
+<<<<<<< Updated upstream
+=======
+import com.example.pidev.Enumerations.TransactionState;
+>>>>>>> Stashed changes
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 

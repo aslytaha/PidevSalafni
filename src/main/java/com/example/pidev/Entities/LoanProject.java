@@ -2,6 +2,7 @@ package com.example.pidev.Entities;
 
 
 
+import com.example.pidev.Enumerations.type;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -41,9 +42,15 @@ public class LoanProject implements Serializable {
     private Boolean validate;
 
 
+<<<<<<< Updated upstream
 
     @OneToOne
     private DetailsLoans detailsLoans;
+=======
+    @JsonManagedReference
+    @OneToMany(mappedBy = "loanProject")
+    private Set<DetailsLoans> detailsLoansSet;
+>>>>>>> Stashed changes
 
 
 
@@ -58,6 +65,9 @@ public class LoanProject implements Serializable {
     @OneToMany(mappedBy = "loanproject")
     private List<Amortization> amortizationTable;
 
+
+    @ManyToOne
+    Assurance Assurance;
 
 
 }

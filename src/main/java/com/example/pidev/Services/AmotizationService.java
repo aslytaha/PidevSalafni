@@ -3,7 +3,11 @@ package com.example.pidev.Services;
 
 import com.example.pidev.Entities.Amortization;
 import com.example.pidev.Entities.LoanProject;
+<<<<<<< Updated upstream
 import com.example.pidev.Entities.type;
+=======
+import com.example.pidev.Enumerations.type;
+>>>>>>> Stashed changes
 import com.example.pidev.Interfaces.IAmortization;
 import com.example.pidev.Repositories.AmortizationRepository;
 import com.example.pidev.Repositories.LoanProjectRepository;

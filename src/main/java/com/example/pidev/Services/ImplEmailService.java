@@ -21,6 +21,18 @@ public class ImplEmailService implements IEmailUserService {
     private VerificationTokenService verificationTokenService;
 
 
+<<<<<<< Updated upstream
+=======
+   /////Aziza/////
+    public void sendEmail(String to,String Subject ,String text) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+        helper.setTo(to);
+        helper.setSubject(Subject);
+        helper.setText(text);
+        javaMailSender.send(message);
+    }
+>>>>>>> Stashed changes
 
     public  void SendResetMail(String to ,String subject ,String text) throws MessagingException {
     MimeMessage message = javaMailSender.createMimeMessage();

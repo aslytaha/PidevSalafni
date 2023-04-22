@@ -15,7 +15,11 @@ public class SmsService {
         private TwilioConfig twilioConfig;
 
         //SMS
+<<<<<<< Updated upstream
         public void SMSSend(String toNumber,String code){
+=======
+        public void SendSMS(String toNumber,String code){
+>>>>>>> Stashed changes
             // Find your Account Sid and Token at twilio.com/user/account
             Twilio.init(twilioConfig.getAccount_sid(), twilioConfig.getAuth_token());
 
@@ -25,6 +29,7 @@ public class SmsService {
 
             System.out.println(message.getSid());
         }
+<<<<<<< Updated upstream
     public Message sendSMS(String toNumbre) {
         Twilio.init(twilioConfig.getAccount_sid(), twilioConfig.getAuth_token());
 
@@ -33,6 +38,8 @@ public class SmsService {
         System.out.println(msg.getSid());
         return msg ;
     }
+=======
+>>>>>>> Stashed changes
 
 
     }

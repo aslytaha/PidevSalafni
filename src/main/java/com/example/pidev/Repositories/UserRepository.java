@@ -19,9 +19,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
             " where u.Username = ?1")
     User findByUsername(String username);
 
-
     User  findByVerificationToken(String Token);
 
+<<<<<<< Updated upstream
+    User  findByVerificationToken(String Token);
+
+=======
+>>>>>>> Stashed changes
 //    boolean existsByEmail(String Email);
 //
 //    User findUserByEmail(String Email);
@@ -29,10 +33,18 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(" select u from User u " +
         " where u.Phone = ?1")
     User findByPhone(Long Phone);
+<<<<<<< Updated upstream
 
     User findByVerificationCode(String code);
 ////////////Nader///////////////
     @Query("SELECT u FROM User u WHERE u.clientaccount.IDClient = ?1")
     User findUserByClientaccount(@Param("clientId") Long clientId);
 
+=======
+
+    User findByVerificationCode(String code);
+
+    @Query("SELECT u FROM User u WHERE u.clientaccount.IDClient = :clientId")
+    User findUserByClientaccount(@Param("clientId") Integer clientId);
+>>>>>>> Stashed changes
 }

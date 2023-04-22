@@ -23,6 +23,7 @@ public class Amortization implements Serializable {
     @Column(name = "Idamor")
     private Long Idamor;
 
+
     @Column(name = "principal")
     private float principal;
 
@@ -45,6 +46,7 @@ public class Amortization implements Serializable {
     private float remainingAmount;
 
     @Enumerated(EnumType.STRING)
+<<<<<<< Updated upstream
     private status status;
 
     @Column(name = "NumDetails")
@@ -53,6 +55,11 @@ public class Amortization implements Serializable {
     public Amortization() {
         this.NumDetails = (int) (Math.random() * 1000000);
     }
+=======
+    private com.example.pidev.Enumerations.status status;
+
+
+>>>>>>> Stashed changes
     @ManyToOne
     private LoanProject loanproject;
 }

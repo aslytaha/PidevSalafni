@@ -44,6 +44,10 @@ public class ClientAccountService implements IClientAccount {
 
 
     public User getUserbyClientAccount(Integer IDClient) {
+<<<<<<< Updated upstream
         return userRepository.findUserByClientaccount(Long.valueOf(IDClient)) ;
+=======
+        return userRepository.findUserByClientaccount(IDClient) ;
+>>>>>>> Stashed changes
     }
 }

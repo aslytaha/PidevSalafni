@@ -1,5 +1,6 @@
 package com.example.pidev.Entities;
 
+<<<<<<< Updated upstream
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+=======
+import com.example.pidev.Enumerations.Act;
+
+>>>>>>> Stashed changes
 import java.io.Serializable;
 
 

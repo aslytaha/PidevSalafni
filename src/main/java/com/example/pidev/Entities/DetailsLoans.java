@@ -27,14 +27,18 @@ public class DetailsLoans  implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)//L'annotation @Temporal est utilisée pour spécifier que l'attribut loandate sera stocké dans la base de données en tant que type de date SQL. L'argument TemporalType.TIMESTAMP précise que la date et l'heure doivent être stockées.
     private Date loanDate;
-    private Date RefundDate;
-    private Float RefundAmount;
+
 
     private String BorrowedName;
 
 
+<<<<<<< Updated upstream
 
     @OneToOne(mappedBy = "detailsLoans", cascade = CascadeType.REMOVE)
+=======
+    @JsonBackReference
+    @ManyToOne
+>>>>>>> Stashed changes
     private LoanProject loanProject;
 
     @PrePersist

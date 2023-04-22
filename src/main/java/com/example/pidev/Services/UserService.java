@@ -101,6 +101,26 @@ import java.util.Set;
             throw new RuntimeException(e);
         }
         return userRepository.save(user);
+<<<<<<< Updated upstream
+    }
+
+    @Override
+    public User retrieveUserByPhone(Long Phone) {
+        return userRepository.findByPhone(Phone);
+    }
+
+
+    //////User Verification //////
+    public User VerifyUser(String token) {
+        User user = userRepository.findByVerificationToken(token);
+        if (user != null) {
+            user.setIsVerified(1);
+            user.setVerificationToken(null);
+            userRepository.save(user);
+        }
+        return user;
+=======
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -120,7 +140,8 @@ import java.util.Set;
         return user;
     }
 
-    public String getEncodedPassword(String password) {
+    public String getEncodedPassword(String password)
+    {
         return passwordEncoder.encode(password);
     }
 

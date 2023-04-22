@@ -18,8 +18,12 @@ import java.util.Random;
 @NoArgsConstructor
 public class UserCodeService {
 
+<<<<<<< Updated upstream
 
     @Autowired
+=======
+     @Autowired
+>>>>>>> Stashed changes
     SmsService smsService;
     @Autowired
     UserCodeRepository userCodeRepository;
@@ -34,7 +38,11 @@ public class UserCodeService {
         userCode.setUser(user);
         userCodeRepository.save(userCode);
         user.setVerificationCode(code);
+<<<<<<< Updated upstream
         smsService.SMSSend(String.valueOf(user.getPhone()),code);
+=======
+        smsService.SendSMS(String.valueOf(user.getPhone()),code);
+>>>>>>> Stashed changes
         return userCode;
     }
     public static String generateCode() {

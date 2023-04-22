@@ -17,5 +17,10 @@ public interface ImpayedLoansRepository extends JpaRepository<ImpayedLoans,Integ
 
     List<ImpayedLoans> findByiProjet(Long projectId);
 
+<<<<<<< Updated upstream
     List<ImpayedLoans> findByNumTrans(Integer numtrans);
+=======
+
+    List<ImpayedLoans> findByPaymentNumber(Integer numtrans);
+>>>>>>> Stashed changes
 }

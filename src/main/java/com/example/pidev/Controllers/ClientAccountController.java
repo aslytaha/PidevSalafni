@@ -5,19 +5,30 @@ import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.ClientAccountRepository;
 import com.example.pidev.Repositories.UserRepository;
 
+<<<<<<< Updated upstream
 
 import com.example.pidev.Services.ClientAccountService;
 import com.lowagie.text.DocumentException;
+=======
+import com.example.pidev.Services.ClientAccountService;
+>>>>>>> Stashed changes
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< Updated upstream
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> Stashed changes
 
 
 
@@ -57,7 +68,11 @@ public class ClientAccountController {
 
     @GetMapping("/Utilisateur/{IDClient}")
     public User UserbyClientAccount(@PathVariable("IDClient") Integer IDClient){
+<<<<<<< Updated upstream
         return userRepository.findUserByClientaccount(Long.valueOf(IDClient));
+=======
+        return userRepository.findUserByClientaccount(IDClient);
+>>>>>>> Stashed changes
     }
     @GetMapping("/getByID/{IDClient}")
     public ClientAccount getByClientAccount(@PathVariable("IDClient") Integer IDClient)
@@ -68,6 +83,7 @@ public class ClientAccountController {
 
 
 
+<<<<<<< Updated upstream
     @GetMapping("/export")
     public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
@@ -80,6 +96,9 @@ public class ClientAccountController {
         ClientAccountPDFExporter exporter = new ClientAccountPDFExporter(listclientAccount);
         exporter.export(response);
     }
+=======
+
+>>>>>>> Stashed changes
 
 
 
@@ -141,7 +160,11 @@ List<ClientAccount> cli=new ArrayList<>();
         int finalMaxAge = maxAge;
         int count = 0;
         for (ClientAccount account : clients) {
+<<<<<<< Updated upstream
             User user=userRepository.findUserByClientaccount(Long.valueOf(account.getIDClient()));
+=======
+            User user=userRepository.findUserByClientaccount(account.getIDClient());
+>>>>>>> Stashed changes
             if ((user.getAge() >= finalMinAge )&& (user.getAge() <= finalMaxAge) ){
                 count++;
             }

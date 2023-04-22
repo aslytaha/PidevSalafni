@@ -20,7 +20,11 @@ public interface Iloan {
     LoanProject update(LoanProject p);
 
     void delete(Long Idprojet);
+<<<<<<< Updated upstream
     LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed, Principal principal) throws Exception;
+=======
+    LoanProject updateLoanAmount(Long Idprojet, Float amountborrowed, Authentication authentication) throws Exception;
+>>>>>>> Stashed changes
 
 
 }

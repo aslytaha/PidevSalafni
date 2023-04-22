@@ -7,6 +7,11 @@ import com.example.pidev.Entities.Transaction;
 
 import com.example.pidev.Repositories.ClientAccountRepository;
 import com.example.pidev.Repositories.TransactionRepository;
+=======
+import com.example.pidev.Repositories.ClientAccountRepository;
+import com.example.pidev.Repositories.TransactionRepository;
+
+>>>>>>> Stashed changes
 import com.example.pidev.Services.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -36,6 +41,10 @@ public class TransactionController {
 
     }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     @PostMapping("/deposit")
     public ResponseEntity<?> depot(@RequestBody DepositRequest depositRequest) {
      Integer  one= depositRequest.getCompteDestinataire();

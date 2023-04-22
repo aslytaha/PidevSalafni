@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+<<<<<<< Updated upstream
+=======
+import org.hibernate.validator.constraints.UniqueElements;
+>>>>>>> Stashed changes
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -22,7 +26,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+<<<<<<< Updated upstream
 @Table( name = "Users",uniqueConstraints = { @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email") })
+=======
+@Table( name = "Users",uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
+>>>>>>> Stashed changes
 public class User implements Serializable  {
 
     @Id
@@ -40,7 +48,11 @@ public class User implements Serializable  {
     @NotNull
     private String Password;
 
+<<<<<<< Updated upstream
     @Email(message = "Email is not valid")
+=======
+    @Email
+>>>>>>> Stashed changes
     private String Email;
 
     private String FirstName;
@@ -53,6 +65,10 @@ public class User implements Serializable  {
     private Integer IsVerified;
     private String verificationToken;
     private String verificationCode;
+<<<<<<< Updated upstream
+=======
+    private Integer age;
+>>>>>>> Stashed changes
 
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -72,9 +88,12 @@ public class User implements Serializable  {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="user")
     private Set<PartnershipProject> partnershipProjects;
 
+<<<<<<< Updated upstream
 
     @OneToMany(mappedBy = "user")
     private Set<LoanProject> loanProjects;
+=======
+>>>>>>> Stashed changes
 
 
 

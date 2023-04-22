@@ -88,6 +88,7 @@ public class LoanProjectController {
         return lal;
 
     }
+<<<<<<< Updated upstream
     @PutMapping("/{Idprojet}")
     public LoanProject AddAssuranceToLoanProject (@PathVariable Long Idprojet, @RequestParam String assurancename)
     {
@@ -113,6 +114,15 @@ public class LoanProjectController {
         loanProject.delete(Idprojet);
     }
 
+=======
+
+
+    @DeleteMapping("/remove/{Idprojet}")
+    public void remove(@PathVariable("Idprojet") Long Idprojet) {
+        loanProject.delete(Idprojet);
+    }
+
+>>>>>>> Stashed changes
     @PutMapping("/update")
     public LoanProject update(@RequestBody LoanProject p) {
         LoanProject loanproject = loanProject.update(p);
@@ -150,8 +160,8 @@ public class LoanProjectController {
     }
 
     @PutMapping("/{projectId}/borrow")
-    public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount, Principal principal) {
-        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount, principal);
+    public ResponseEntity<LoanProject> borrow(@PathVariable Long projectId, @RequestParam Float amount, Authentication authentication) {
+        LoanProject loanproject = loanProject.updateLoanAmount(projectId, amount, authentication);
         if (loanproject != null) {
             return ResponseEntity.ok(loanproject);
         } else {

@@ -1,5 +1,6 @@
 package com.example.pidev.Services;
 
+<<<<<<< Updated upstream
 import com.example.pidev.Entities.Amortization;
 import com.example.pidev.Entities.ImpayedLoans;
 import com.example.pidev.Entities.LoanProject;
@@ -12,6 +13,15 @@ import com.example.pidev.Repositories.LoanProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 ....
+=======
+import com.example.pidev.Entities.*;
+import com.example.pidev.Enumerations.status;
+import com.example.pidev.Interfaces.IImpayedLoansService;
+import com.example.pidev.Repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+>>>>>>> Stashed changes
 import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -28,11 +38,22 @@ public class ImpayedLoansService implements IImpayedLoansService {
     @Autowired
     LoanProjectRepository loanproj;
     @Autowired
+<<<<<<< Updated upstream
     EmailService service;
     @Autowired
     ImpayedLoansService impay;
     @Autowired
     AmortizationRepository amortizationRepository;
+=======
+    ImpayedLoansService impay;
+    @Autowired
+    AmortizationRepository amortizationRepository;
+    @Autowired
+    ImplEmailService emailService ;
+
+    @Autowired
+    UserRepository userRepository;
+>>>>>>> Stashed changes
     @Override
     public ImpayedLoans addImpayedLoans(ImpayedLoans il) {
 
@@ -93,7 +114,11 @@ public class ImpayedLoansService implements IImpayedLoansService {
                }
                ImpayedLoans il = impayedLoans.get(0);
                String to = il.getEmail();
+<<<<<<< Updated upstream
                Integer idp=il.getNumTrans();
+=======
+               Integer idp=il.getPaymentNumber();
+>>>>>>> Stashed changes
                String subject = "Unpaid portion of credit!";
                if (unpaidLoanCount < 3) {
                    String text1 = "Dear entrepreneur,\n\n" +
@@ -104,7 +129,11 @@ public class ImpayedLoansService implements IImpayedLoansService {
                            "Best regards,\n" +
                            "SalafniMicroFinance team";
                    try {
+<<<<<<< Updated upstream
                        service.sendEmail(to, subject, text1);
+=======
+                       emailService.sendEmail(to, subject, text1);
+>>>>>>> Stashed changes
                    } catch (MessagingException e) {
                        throw new RuntimeException(e);
 
@@ -118,7 +147,11 @@ public class ImpayedLoansService implements IImpayedLoansService {
                            "Best regards,\n" +
                            "SalafniMicroFinance team";
                    try {
+<<<<<<< Updated upstream
                        service.sendEmail(to, subject, text2);
+=======
+                       emailService.sendEmail(to, subject, text2);
+>>>>>>> Stashed changes
                    } catch (MessagingException e) {
                        throw new RuntimeException(e);
 
@@ -143,7 +176,11 @@ public class ImpayedLoansService implements IImpayedLoansService {
                            "\n" +
                            "SalafniMicroFinance team";
                    try {
+<<<<<<< Updated upstream
                        service.sendEmail(to, subjectf, text3);
+=======
+                       emailService.sendEmail(to, subjectf, text3);
+>>>>>>> Stashed changes
                    } catch (MessagingException e) {
                        throw new RuntimeException(e);
 
@@ -157,6 +194,7 @@ public class ImpayedLoansService implements IImpayedLoansService {
         LocalDate now= LocalDate.now();
         Date date = java.sql.Date.valueOf(now);
         List<Amortization> amortizations = amortizationRepository.findAll();
+<<<<<<< Updated upstream
         List<Amortization> m= amortizations.stream().filter(s->existepas(s.getNumDetails())&&(s.getPaymentDate().before(date))&&(s.getStatus().equals(Status.NOTPAYED))).collect(Collectors.toList());
         //s->s.getStatus().equals("NOTPAYED")
         System.out.println("nooooo"+m);
@@ -164,6 +202,14 @@ public class ImpayedLoansService implements IImpayedLoansService {
             ImpayedLoans impayedLoan = new ImpayedLoans();
             Integer t = amortization.getNumDetails();
             impayedLoan.setNumTrans(t);
+=======
+        List<Amortization> m= amortizations.stream().filter(s->existepas(s.getPaymentNumber())&&(s.getPaymentDate().before(date))&&(s.getStatus().equals(status.NOTPAYED))).collect(Collectors.toList());
+        System.out.println("nooooo"+m);
+        for (Amortization amortization : m) {
+            ImpayedLoans impayedLoan = new ImpayedLoans();
+            Integer t = amortization.getPaymentNumber();
+            impayedLoan.setPaymentNumber(t);
+>>>>>>> Stashed changes
             Long i = amortization.getLoanproject().getIdprojet();
             impayedLoan.setIProjet(i);
             float h =amortization.getPaymentAmount();
@@ -174,15 +220,25 @@ public class ImpayedLoansService implements IImpayedLoansService {
             Date d=calculateNewPaymentDate(amortization);
             impayedLoan.setNewPaymentDate(d);
             LoanProject loan = loanproj.findById(i).orElse(null);
+<<<<<<< Updated upstream
             String mail=loan.getEmail();
             impayedLoan.setEmail(mail);
+=======
+            User userMail=userRepository.findByUsername(loan.getOwner());
+
+            impayedLoan.setEmail(userMail.getEmail());
+>>>>>>> Stashed changes
 
             impayedLoansRepository.save(impayedLoan);
         }
 
     }
     public boolean existepas(Integer numtrans){
+<<<<<<< Updated upstream
         List<ImpayedLoans> imp = impayedLoansRepository.findByNumTrans(numtrans);
+=======
+        List<ImpayedLoans> imp = impayedLoansRepository.findByPaymentNumber(numtrans);
+>>>>>>> Stashed changes
         return imp.isEmpty();
     }
     private Float calculateNewAmountToPay(Amortization amortization) {
