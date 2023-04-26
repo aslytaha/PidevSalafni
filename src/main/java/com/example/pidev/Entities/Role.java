@@ -3,6 +3,7 @@ package com.example.pidev.Entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
@@ -20,5 +21,6 @@ public class Role {
     private Long idRole;
     private String roleName;
     private String roleDescription;
+
 
 }

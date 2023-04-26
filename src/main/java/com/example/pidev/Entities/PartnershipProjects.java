@@ -1,5 +1,7 @@
 package com.example.pidev.Entities;
 
+import com.example.pidev.Enumerations.Act;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;

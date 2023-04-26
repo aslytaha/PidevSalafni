@@ -2,6 +2,7 @@ package com.example.pidev.Entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,13 +26,15 @@ public class ClientAccount implements Serializable {
     private Boolean Subscription ;
     private String ExpirationDate ;
     private  Long rib;
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "compteEmetteur")
     Set<Transaction> transactionSet;
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "compteDestinataire")
     Set<Transaction> transactionS;
-
+    @JsonIgnore
+    @OneToOne(mappedBy = "clientaccount")
+    private User user;
 
 
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy="clientaccount")

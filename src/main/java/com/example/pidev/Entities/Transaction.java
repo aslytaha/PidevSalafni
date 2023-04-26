@@ -1,14 +1,11 @@
 package com.example.pidev.Entities;
+import com.example.pidev.Enumerations.TransactionState;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 
 @Entity
