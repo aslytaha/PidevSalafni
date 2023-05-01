@@ -13,7 +13,7 @@ public interface IPartnershipProject {
 
     List<PartnershipProject> retrieveAllPartnershipProjects();
 
-    PartnershipProject addPartnershipProject(PartnershipProject p);
+     PartnershipProject addPartnershipProject(PartnershipProject p,User user);
     List<PartnershipProject> retrieveAllPartnershipProjectsByUser(Long iduser);
 
     PartnershipProject retrievePartnershipProject (Long idPartnership);

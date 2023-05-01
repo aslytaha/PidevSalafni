@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository <User,Integer> {
+public interface UserRepository extends JpaRepository <User,Long> {
     @Query("select u.clientaccount.IDClient , c.IDClient from User u, ClientAccount c where u.clientaccount.IDClient=c.IDClient")
    User findUser (Integer IDClient );
 

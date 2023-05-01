@@ -5,6 +5,7 @@ import com.example.pidev.Repositories.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -46,10 +47,11 @@ public class PartnershipProjectService implements IPartnershipProject {
     }
 
     @Override
-    public PartnershipProject addPartnershipProject(PartnershipProject p) {
+    public PartnershipProject addPartnershipProject(PartnershipProject p,User user) {
 
         float shareofProject = ((float) p.getAmountRequested() / (float) p.getAmountTotal()) * 100;
         p.setShareofProject(shareofProject);
+        p.setUser(user);
         //  notifyUsersOfNewProjects(p, "psssst nouveau projet" + p.getProjectName(),"fidele");
         return partnershipProjectRepository.save(p);
     }
@@ -88,11 +90,12 @@ public class PartnershipProjectService implements IPartnershipProject {
                 double win = investmentAmount / project.getAmountTotal();
                 double projectShareValue = win / projectDuration;
 
-                projectShareValues.put(project, projectShareValue); // store the projectShareValue in the map
+                projectShareValues.put(project, projectShareValue);
+
             }
         }
 
-        // sort the projectShareValues map based on the projectShareValue
+
         Map<PartnershipProject, Double> sortedProjectShareValues = new LinkedHashMap<>();
         projectShareValues.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -110,16 +113,16 @@ public class PartnershipProjectService implements IPartnershipProject {
         PartnershipProject project = partnershipProjectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID"));
 
-        // Calculer le nombre de points du projet
+
         int points = calculateProjectPoints(project);
 
-        // Mettre à jour le statut du projet
+
         if (points < 4) {
             project.setStatu(Statu.refusé);
         } else {
             project.setStatu(Statu.accepté);
-            sendEmailToClient(projectId, "Votre projet a été validé.", "hhhhh");
-            //notifyUsersOfNewProjects(project, "fidele Salafni", "psssst nouveau projet" + project.getProjectName() + project.getShareofProject() + project.getDescriptionProject() + "ne ratez pas cette chance");
+            sendEmailToClient(projectId, "Votre projet a été validé.", "validation projet");
+           notifyUsersOfNewProjects(project, "fidele Salafni", "psssst nouveau projet" + project.getProjectName() + project.getShareofProject() + project.getDescriptionProject() + "ne ratez pas cette chance");
 
             Long user = project.getUser().getPhone();
             smsClient.SendSMS(String.valueOf(user));
@@ -130,12 +133,12 @@ public class PartnershipProjectService implements IPartnershipProject {
     }
 
     private int calculateProjectPoints(PartnershipProject project) {
-        // Calculer le pourcentage de financement actuel
+
         double fundingPercentage = ((double) project.getAmountRequested() / project.getAmountTotal()) * 100;
 
         long projectDuration = ChronoUnit.DAYS.between(project.getStartDate().toInstant(), project.getFinishDate().toInstant());
 
-        // Assigner des points en fonction des mesures obtenues
+
         int points = 0;
         if (fundingPercentage >= 90) {
             points += 0;
@@ -165,7 +168,7 @@ public class PartnershipProjectService implements IPartnershipProject {
     }
 
 
-    // @Scheduled(cron = "*/15 * * * * *")
+     @Scheduled(cron = "*/15 * * * * *")
     public PartnershipProject BestProject() {
         List<PartnershipProject> projects = partnershipProjectRepository.findAll();
         PartnershipProject bestProject = null;
@@ -207,7 +210,7 @@ public class PartnershipProjectService implements IPartnershipProject {
         List<User> users = getAllUsersWithRequests();
 
         for (User user : users) {
-            emailService.sendEmail(user.getEmail(), subject, text);
+           // emailService.sendEmail(user.getEmail(), subject, text);
         }
     }
 

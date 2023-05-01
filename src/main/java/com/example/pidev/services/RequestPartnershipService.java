@@ -66,17 +66,16 @@ SMSClient smsClient;
             System.out.println("La demande de partenariat a été ajoutée et assignée au projet avec succès.");
             //smsClient.SendSMSs(project.getUser().getPhone().toString());
         }
-        //MAIL
+
         sendEmailToClients(request, "Votre demande a été enregistre avec succes. passe au paiment _\n voici notre RIB bancaire : 123456","demande de partenariat");
-        //SMS
-        // smsClient.SendSMSs(project.getUser().getPhone().toString());
+
         return request;
     }
 
 
 
     public List<RequestPartnership> sortPartnershipRequestsByAmountPayed(Long projectId) {
-        // récupérer le projet par son ID
+
         PartnershipProject project = partnershipProjectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Le projet n'existe pas"));
 
@@ -91,17 +90,17 @@ SMSClient smsClient;
 
 
     public void removeRequestAndAdjustAmount(Long requestId, Long projectId) {
-        // récupérer le projet à partir de l'ID
+
         PartnershipProject project = partnershipProjectRepository.findById(projectId).orElse(null);
         RequestPartnership request = requestPartnershipRepository.findById(requestId).orElse(null);
 
         if (project != null && project.getRequestPartnerships().contains(request)) {
-            // supprimer la demande de partenariat de la liste
+
             project.getRequestPartnerships().remove(request);
-            //Màj de amountRequested
+
             Long amountRequested = project.getAmountRequested() + request.getAmountPayed();
             project.setAmountRequested(amountRequested);
-            // enregistrer les changements dans la base de données
+
             partnershipProjectRepository.save(project);
             requestPartnershipRepository.delete(request);
             System.out.println("La demande de partenariat a été supprimée du projet avec succès.");
@@ -126,10 +125,10 @@ SMSClient smsClient;
 
 
     public List<RequestPartnership> getBestRequest() {
-        // Récupérer les 3 meilleures demandes de partenariat
+
         List<RequestPartnership> requests = requestPartnershipRepository.findAllByOrderByAmountPayedDesc().stream().limit(3).collect(Collectors.toList());
 
-        // Parcourir les demandes et prolonger l'abonnement du client associé
+
         for (RequestPartnership request : requests) {
             ClientAccount clientaccount = request.getClientaccount();
             // Prolonger l'abonnement de 30 jours

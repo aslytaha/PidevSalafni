@@ -2,7 +2,9 @@ package com.example.pidev.controllers;
 
 
 import com.example.pidev.Entities.PartnershipProject;
+import com.example.pidev.Entities.User;
 import com.example.pidev.Repositories.PartnershipProjectRepository;
+import com.example.pidev.Repositories.UserRepository;
 import com.example.pidev.services.PartnershipProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class PartnershipProjectController {
     PartnershipProjectService partnershipProject;
     PartnershipProjectRepository partnershipProjectRepository;
+
+    UserRepository userRepository;
 
     // http://localhost:8089/salafni/partnership/retrieve-all-partnership
     @GetMapping("/retrieve-all-partnership")
@@ -53,9 +57,10 @@ public class PartnershipProjectController {
     }
 
     // http://localhost:8089/salafni/partnership/add-partnership
-    @PostMapping("/add-partnership")
-    public PartnershipProject addPartnership(@RequestBody PartnershipProject p) {
-        PartnershipProject partnership = partnershipProject.addPartnershipProject(p);
+    @PostMapping("/add-partnership/{iduser}")
+    public PartnershipProject addPartnership(@RequestBody PartnershipProject p,@PathVariable Long iduser) {
+        User user= userRepository.findById(iduser).get();
+        PartnershipProject partnership = partnershipProject.addPartnershipProject(p,user);
         return partnership;
     }
 
